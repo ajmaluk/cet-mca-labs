@@ -2,7 +2,8 @@ import java.util.Scanner;
 
 class MatrixAdd{
     public static void main(String[] args) {
-        Scanner s = new Scanner(System.in);
+        Scanner s;
+        s = new Scanner(System.in);
         int m1,n1,m2,n2;
         System.out.println("Enter the Number of Rows in the first Martix : ");
         m1 = s.nextInt();
