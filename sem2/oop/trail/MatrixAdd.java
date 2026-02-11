@@ -15,6 +15,7 @@ class MatrixAdd{
 
         if(m1 != m2 && n1 != n2){
             System.out.println("Not possible ! ");
+            s.close();
             return;
         }
 
@@ -50,5 +51,6 @@ class MatrixAdd{
             }
             System.out.println("\n");
         }
+        s.close();
     }
 }
