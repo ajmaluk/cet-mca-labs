@@ -1,71 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>EB System Sidebar</title>
+    <link rel="stylesheet" href="../../styles/main.css">
     <style>
-        body{
-            font-family: Arial, Helvetica, sans-serif;
-            width: 100%;
+        body {
+            padding: 2rem 1rem;
+            background: #fff;
             height: 100vh;
-            background-color: lightskyblue;
             display: flex;
             flex-direction: column;
-            justify-content: space-between; 
-            padding: 0;
+        }
+
+        .nav-menu {
+            flex-grow: 1;
+            list-style: none;
             margin: 0;
+            padding: 0;
         }
 
-        ul{
-            list-style-type:none;
-            margin:0;
-            padding:0;
+        .nav-item {
+            margin-bottom: 0.5rem;
         }
 
-        ul li{
-            width:100%;
-            left:0;
-            margin-bottom: 5px;
-            background: lightsalmon;
-            padding:10px;
+        .nav-link {
+            display: block;
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            color: var(--text-color);
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
         }
 
-        a{
-            text-decoration:none;
-            color:#fff;
-            width:100%;
-            margin:0;
+        .nav-link:hover {
+            background: #f1f5f9;
+            color: var(--primary-color);
+            padding-left: 1.5rem;
         }
-        .logout{
+
+        .logout-btn {
+            background: #fef2f2;
+            color: #ef4444;
+            border: 1px solid #fee2e2;
             width: 100%;
-            display: flex;
-            justify-content: center;
-            margin-bottom:30px;
-        }   
+            padding: 0.8rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
 
-        .logout button{
-            width:100%;
-            color:#fff;
-            background-color: red;
-            padding:10px;
-            border:none;
+        .logout-btn:hover {
+            background: #ef4444;
+            color: white;
         }
     </style>
 </head>
+
 <body>
-    <ul>
-        <a href="consumer_reg.php" target="dash"><li>Registration</li></a>
-        <a href="add_bill.php" target="dash"><li>Bill Entry</li>
+    <h2 style="font-size: 1.25rem; color: var(--primary-color); margin-bottom: 2rem;">Admin Tools</h2>
+    <ul class="nav-menu">
+        <li class="nav-item"><a href="consumer_reg.php" target="dash" class="nav-link">Consumer Registration</a></li>
+        <li class="nav-item"><a href="add_bill.php" target="dash" class="nav-link">New Bill Entry</a></li>
+        <li class="nav-item"><a href="search_bill.php" target="dash" class="nav-link">Search Records</a></li>
     </ul>
-    <div class="logout">
-        <button onclick="logout();">Logout</button>
-    </div>
+
+    <button onclick="logout();" class="logout-btn">Logout</button>
 
     <script>
-        function logout(){
-            top.location.href = 'index.php';
+        function logout() {
+            top.location.href = 'login.php';
         }
     </script>
 </body>
+
 </html>

@@ -1,148 +1,144 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
-  <title>JavaScript String and Math Functions</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JavaScript String and Math Utilities - Program 7</title>
+  <link rel="stylesheet" href="styles/main.css">
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      line-height: 1.6;
-      padding: 20px;
-      background: #f4f4f4;
+    .utility-card {
+      background: white;
+      padding: 2rem;
+      border-radius: var(--border-radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 2rem;
     }
-    h1, h2 {
-      color: #333;
+
+    .result-box {
+      background: #f1f5f9;
+      padding: 1rem;
+      border-radius: 8px;
+      margin: 1.5rem 0;
+      border-left: 4px solid var(--primary-color);
+      min-height: 3.5rem;
+      display: flex;
+      align-items: center;
+      font-size: 1.125rem;
     }
-    .section {
-      background: #fff;
-      padding: 15px;
-      margin-bottom: 20px;
-      border-radius: 5px;
-      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+
+    .btn-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 10px;
     }
-    button {
-      margin: 5px;
+
+    .method-btn {
+      background: white;
+      border: 1px solid #cbd5e1;
+      padding: 0.6rem 1rem;
+      border-radius: 6px;
+      cursor: pointer;
+      font-weight: 500;
+      transition: all 0.2s;
+      text-align: left;
+    }
+
+    .method-btn:hover {
+      background: #f8fafc;
+      border-color: var(--primary-color);
+      transform: translateY(-1px);
+    }
+
+    .method-btn code {
+      color: var(--primary-dark);
+      font-weight: bold;
     }
   </style>
 </head>
-<body>
 
-  <h1>JavaScript String and Math Functions</h1>
+<body class="fade-in">
+  <div class="container">
+    <h1 class="main-title">JavaScript Strings & Math</h1>
 
-  <div class="section">
-    <h2>🔤 String Methods – "hello"</h2>
-    <p class="s_result">Result : </p>
-    <button onclick="sLength()">Length</button>
-    <button onclick="sUpper()">Uppercase</button>
-    <button onclick="sLower()">Lowercase</button>
-    <button onclick="sCharAt()">Character at Index 2</button>
-    <button onclick="sSub()">Substring(2, 4)</button>
-    <button onclick="sIndexOf()">indexOf('l')</button>
-    <button onclick="sReplace()">Replace (hello → hai)</button>
-    <button onclick="sCat()">Concat with 'World'</button>
-    <button onclick="sSlice()">Slice (1, 4)</button>
-    <button onclick="sTrim()">Trim</button>
-  </div>
+    <!-- String Section -->
+    <div class="utility-card">
+      <h2>🔤 String Methods - <code style="color: var(--text-muted);">"hello"</code></h2>
+      <div id="string-result" class="result-box">
+        <span style="color: var(--text-muted);">Click a method below to see the result...</span>
+      </div>
+      <div class="btn-grid">
+        <button class="method-btn" onclick="runStr('length')"><code>.length</code></button>
+        <button class="method-btn" onclick="runStr('upper')"><code>.toUpperCase()</code></button>
+        <button class="method-btn" onclick="runStr('lower')"><code>.toLowerCase()</code></button>
+        <button class="method-btn" onclick="runStr('charAt2')"><code>.charAt(2)</code></button>
+        <button class="method-btn" onclick="runStr('sub24')"><code>.substring(2, 4)</code></button>
+        <button class="method-btn" onclick="runStr('indexL')"><code>.indexOf('l')</code></button>
+        <button class="method-btn" onclick="runStr('replace')"><code>.replace()</code></button>
+        <button class="method-btn" onclick="runStr('concat')"><code>.concat()</code></button>
+        <button class="method-btn" onclick="runStr('slice')"><code>.slice(1, 4)</code></button>
+        <button class="method-btn" onclick="runStr('trim')"><code>.trim()</code></button>
+      </div>
+    </div>
 
-  <div class="section">
-    <h2>🧮 Math Methods – 20.44</h2>
-    <p class="m_result">Result : </p>
-    <button onclick="mRound()">Round</button>
-    <button onclick="mFloor()">Floor</button>
-    <button onclick="mCeil()">Ceil</button>
-    <button onclick="mRandom()">Random (1 to 10)</button>
-    <button onclick="mMax()">Max of 20.44, 1, 10, 13, 100, 20, 400</button>
-    <button onclick="mMin()">Min of 20.44, 1, 10, 13, 100, 20, 400</button>
-    <button onclick="mSqrt()">Square Root</button>
-    <button onclick="mPower()">20.44 to Power 2</button>
+    <!-- Math Section -->
+    <div class="utility-card">
+      <h2>🧮 Math Methods - <code style="color: var(--text-muted);">20.44</code></h2>
+      <div id="math-result" class="result-box">
+        <span style="color: var(--text-muted);">Click a method below to see the result...</span>
+      </div>
+      <div class="btn-grid">
+        <button class="method-btn" onclick="runMath('round')"><code>Math.round()</code></button>
+        <button class="method-btn" onclick="runMath('floor')"><code>Math.floor()</code></button>
+        <button class="method-btn" onclick="runMath('ceil')"><code>Math.ceil()</code></button>
+        <button class="method-btn" onclick="runMath('random')"><code>Math.random()</code></button>
+        <button class="method-btn" onclick="runMath('max')"><code>Math.max()</code></button>
+        <button class="method-btn" onclick="runMath('min')"><code>Math.min()</code></button>
+        <button class="method-btn" onclick="runMath('sqrt')"><code>Math.sqrt()</code></button>
+        <button class="method-btn" onclick="runMath('pow')"><code>Math.pow()</code></button>
+      </div>
+    </div>
   </div>
 
   <script>
     const string = "hello";
     const number = 20.44;
 
-    function replaceS(result) {
-      document.querySelector(".s_result").innerHTML = `<strong>Result:</strong> ${result}`;
+    function updateRes(id, val) {
+      const el = document.getElementById(id);
+      el.innerHTML = `<strong>Result:</strong> &nbsp; <code style="color: var(--primary-color); font-size: 1.25rem;">${val}</code>`;
+      el.style.borderColor = "#22c55e"; // Success green flash
+      setTimeout(() => el.style.borderColor = "#2563eb", 500);
     }
 
-    function replaceM(result) {
-      document.querySelector(".m_result").innerHTML = `<strong>Result:</strong> ${result}`;
+    function runStr(action) {
+      switch (action) {
+        case 'length': updateRes('string-result', string.length); break;
+        case 'upper': updateRes('string-result', string.toUpperCase()); break;
+        case 'lower': updateRes('string-result', string.toLowerCase()); break;
+        case 'charAt2': updateRes('string-result', string.charAt(2)); break;
+        case 'sub24': updateRes('string-result', string.substring(2, 4)); break;
+        case 'indexL': updateRes('string-result', string.indexOf('l')); break;
+        case 'replace': updateRes('string-result', string.replace("hello", "hai")); break;
+        case 'concat': updateRes('string-result', string.concat(" world")); break;
+        case 'slice': updateRes('string-result', string.slice(1, 4)); break;
+        case 'trim': updateRes('string-result', ("  " + string + "   ").trim()); break;
+      }
     }
 
-    function sLength() {
-      replaceS(string.length);
-    }
-
-    function sUpper() {
-      replaceS(string.toUpperCase());
-    }
-
-    function sLower() {
-      replaceS(string.toLowerCase());
-    }
-
-    function sCharAt() {
-      replaceS(string.charAt(2));
-    }
-
-    function sSub() {
-      replaceS(string.substring(2, 4));
-    }
-
-    function sIndexOf() {
-      replaceS(string.indexOf('l'));
-    }
-
-    function sReplace() {
-      replaceS(string.replace("hello", "hai"));
-    }
-
-    function sCat(){
-      replaceS(string.concat("world"));
-    }
-
-    function sSlice() {
-      replaceS(string.slice(1, 4));
-    }
-
-    function sTrim() {
-      let strWithSpaces = "  hello world   ";
-      replaceS(strWithSpaces.trim());
-    }
-
-    function mRound() {
-      replaceM(Math.round(number));
-    }
-
-    function mFloor() {
-      replaceM(Math.floor(number));
-    }
-
-    function mCeil() {
-      replaceM(Math.ceil(number));
-    }
-
-    function mRandom() {
-      const rand = Math.floor(Math.random() * 10) + 1;
-      replaceM(rand);
-    }
-
-    function mMax() {
-      replaceM(Math.max(20.44, 1, 10, 13, 100, 20, 400));
-    }
-
-    function mMin() {
-      replaceM(Math.min(20.44, 1, 10, 13, 100, 20, 400));
-    }
-
-    function mSqrt() {
-      replaceM(Math.sqrt(number));
-    }
-
-    function mPower() {
-      replaceM(Math.pow(number, 2));
+    function runMath(action) {
+      switch (action) {
+        case 'round': updateRes('math-result', Math.round(number)); break;
+        case 'floor': updateRes('math-result', Math.floor(number)); break;
+        case 'ceil': updateRes('math-result', Math.ceil(number)); break;
+        case 'random': updateRes('math-result', (Math.random() * 10 + 1).toFixed(2)); break;
+        case 'max': updateRes('math-result', Math.max(number, 1, 10, 100, 400)); break;
+        case 'min': updateRes('math-result', Math.min(number, 1, 10, 100, 400)); break;
+        case 'sqrt': updateRes('math-result', Math.sqrt(number).toFixed(4)); break;
+        case 'pow': updateRes('math-result', Math.pow(number, 2).toFixed(2)); break;
+      }
     }
   </script>
-
 </body>
+
 </html>

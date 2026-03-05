@@ -1,26 +1,60 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Program 1</title>
+    <title>Web Browsers and Web Servers - Program 1</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <!-- 
+        Objective: Create a basic web page explaining Web Browsers and Web Servers.
+        Key elements: Semantic headers, images, lists, and external links.
+    -->
 </head>
-<body>
-    <marquee><h1 class="main">Web Browsers and Web Servers</h1></marquee>
-    <img src="https://media.geeksforgeeks.org/wp-content/uploads/20190927155217/webserver.png" alt="web_image" width="90%">
-    <h3 class="sub">Web Browsers</h3>
-    <p>A web browser, often shortened to browser, is an application for accessing websites. When a user requests a web page from a particular website, the browser retrieves its files from a web server and then displays the page on the user's screen. Browsers can also display content stored locally on the user's device.</p>
-    <ul>
-        <li>Chrome</li>
-        <li>Mozzilla</li>
-    </ul>
-    <a href="https://en.wikipedia.org/wiki/Web_browser">Click Here To Know More</a>
-    <h3>Web Servers</h3>
-    <p>A web server is computer software and underlying hardware that accepts requests via HTTP (the network protocol created to distribute web content) or its secure variant HTTPS. A user agent, commonly a web browser or web crawler, initiates communication by making a request for a web page or other resource using HTTP, and the server responds with the content of that resource or an error message. A web server can also accept and store resources sent from the user agent if configured to do so.</p>
-    <ul>
-        <li>Apache</li>
-        <li>IIS</li>
-    </ul>
-    <a href="https://en.wikipedia.org/wiki/Web_server">Click Here To Know More</a>
+
+<body class="fade-in">
+    <div class="container">
+        <h1 class="main-title">Web Browsers and Web Servers</h1>
+
+        <div class="image-wrapper">
+            <img src="https://media.geeksforgeeks.org/wp-content/uploads/20190927155217/webserver.png"
+                alt="Concept of Web Servers and Browsers">
+        </div>
+
+        <section class="section">
+            <h2>What is a Web Browser?</h2>
+            <p>
+                A web browser is an application used to access and view websites. When a user requests a web page, the
+                browser retrieves necessary files from a web server and renders them on the screen. Browsers interpret
+                HTML, CSS, and JavaScript to create the interactive experience we see online.
+            </p>
+            <h3>Popular Browsers</h3>
+            <ul>
+                <li><strong>Google Chrome:</strong> The most widely used browser globally.</li>
+                <li><strong>Mozilla Firefox:</strong> A privacy-focused, open-source browser.</li>
+                <li><strong>Safari:</strong> Optimized for Apple hardware.</li>
+                <li><strong>Microsoft Edge:</strong> Built on the Chromium engine.</li>
+            </ul>
+            <a href="https://en.wikipedia.org/wiki/Web_browser" class="btn" target="_blank">Learn More About
+                Browsers</a>
+        </section>
+
+        <section class="section">
+            <h2>What is a Web Server?</h2>
+            <p>
+                A web server is a computer (hardware and software) that stores web content and delivers it to users via
+                the internet when requested. It uses communication protocols like HTTP/HTTPS to handle user requests
+                from browsers.
+            </p>
+            <h3>Common Web Servers</h3>
+            <ul>
+                <li><strong>Apache:</strong> A long-standing, flexible open-source server.</li>
+                <li><strong>Nginx:</strong> Known for high performance and reverse proxy capabilities.</li>
+                <li><strong>IIS:</strong> Developed by Microsoft for Windows environments.</li>
+            </ul>
+            <a href="https://en.wikipedia.org/wiki/Web_server" class="btn" target="_blank">Learn More About Servers</a>
+        </section>
+    </div>
 </body>
+
 </html>

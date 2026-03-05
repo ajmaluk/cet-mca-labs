@@ -1,43 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Navigation Menu</title>
+    <title>Navigation Sidebar</title>
+    <link rel="stylesheet" href="../styles/main.css">
     <style>
         body {
-            font-family: Arial, sans-serif;
-            margin: 20px;
+            padding: 1.5rem;
+            background: #f8fafc;
         }
 
-        ul {
-            list-style-type: none;
+        .nav-list {
+            list-style: none;
             padding: 0;
+            margin: 0;
         }
 
-        li {
-            margin-bottom: 10px;
+        .nav-item {
+            margin-bottom: 0.75rem;
         }
 
-        a {
+        .nav-link {
+            display: block;
+            padding: 0.75rem 1rem;
+            color: var(--text-color);
             text-decoration: none;
-            color: #007BFF;
-            font-weight: bold;
-            transition: color 0.3s ease;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+            transition: all 0.2s;
+            font-weight: 500;
         }
 
-        a:hover {
-            color: #0056b3;
+        .nav-link:hover {
+            background: var(--primary-color);
+            color: white;
+            transform: translateX(5px);
         }
     </style>
 </head>
+
 <body>
-    <nav>
-        <ul>
-            <li><a href="../program2/personal_details.html" target="frameview">Personal Details</a></li>
-            <li><a href="../program2/education_qualification.html" target="frameview">Education Qualification</a></li>
-            <li><a href="../program2/family_details.html" target="frameview">Family Details</a></li>
-        </ul>
-    </nav>
+    <h3 style="font-size: 1.25rem;">Navigate</h3>
+    <ul class="nav-list">
+        <li class="nav-item"><a href="../program2/personal_details.html" target="frameview" class="nav-link">Personal
+                Details</a></li>
+        <li class="nav-item"><a href="../program1.html" target="frameview" class="nav-link">Web Concepts</a></li>
+        <li class="nav-item"><a href="../program3.html" target="frameview" class="nav-link">Web Tech Overview</a></li>
+        <li class="nav-item"><a href="../program4.html" target="frameview" class="nav-link">Registration Form</a></li>
+    </ul>
 </body>
+
 </html>

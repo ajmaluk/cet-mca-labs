@@ -1,88 +1,61 @@
 <?php
-        session_start();
-        if (isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in'] === true) {
+    session_start();
+    if (isset($_SESSION['user_logged_in']) && $_SESSION['user_logged_in'] === true) {
+        header("Location: dashboard.php");
+        exit;
+    }
+
+    $conn = mysqli_connect("localhost", "root", "", "ajmal");
+    if (!$conn) { die("DB Error"); }
+
+    if ($_SERVER["REQUEST_METHOD"] === "POST") {
+        $email = mysqli_real_escape_string($conn, $_POST['email']);
+        $password = mysqli_real_escape_string($conn, $_POST['password']);
+        $sql = "SELECT * FROM student WHERE email = '$email' AND password = '$password'";
+        $result = mysqli_query($conn, $sql);
+
+        if ($result && mysqli_num_rows($result) === 1) {
+            $_SESSION['user_logged_in'] = true;
+            $_SESSION['user_email'] = $email;
             header("Location: dashboard.php");
             exit;
+        } else {
+            $error = "Invalid student credentials.";
         }
-
-        $conn = mysqli_connect("localhost", "root", "", "ajmal");
-
-        if (!$conn) {
-            die("Connection failed: " . mysqli_connect_error());
-        }
-
-        
-        if ($_SERVER["REQUEST_METHOD"] === "POST") {
-            $email = $_POST['email'];
-            $password = $_POST['password'];
-            $sql_query = "SELECT email, password FROM student WHERE email = '$email' AND password = '$password'";
-
-            $result = mysqli_query($conn, $sql_query);
-
-            if ($result && mysqli_num_rows($result) === 1) {
-                $_SESSION['user_logged_in'] = true;
-                $_SESSION['user_email'] = $email;
-                header("Location: dashboard.php");
-                exit;
-            }
-            else{
-                echo"<script>alert('Invalid Email or Password');</script>";
-            }
-        }
-
-        if ($conn) {
-            mysqli_close($conn);
-        }
-    ?>
+    }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Login</title>
+    <title>Student Login</title>
+    <link rel="stylesheet" href="../../../styles/main.css">
     <style>
-        :root{
-        --primary-color : #20a7db;
-        --button-color : #097969;
-        --input-color : #cfecf7;
-        }
-        body{
-            font-family:Arial, Helvetica, sans-serif;
-            background: var(--primary-color);
-        }
-        form{
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-        }
-        form input[type="email"]{
-            margin-top: 100px;
-        }
-        form input[type="password"],form input[type="email"]{
-            width: 300px;
-            padding: 10px;
-            margin-bottom: 20px;
-            background-color: var(--input-color);
-            border: none;
-            border-radius: 15px;
-        }
-        form input[type="submit"]{
-            width: 200px;
-            padding: 10px;
-            background-color: var(--button-color);
-            color: #fff;
-            border: none;
-            border-radius: 15px;
-        }
+        body { display: flex; align-items: center; justify-content: center; background: #f1f5f9; }
+        .login-container { background: white; padding: 3rem; border-radius: var(--border-radius); box-shadow: var(--shadow); width: 100%; max-width: 400px; }
+        input { width: 100%; padding: 0.8rem; border-radius: 8px; border: 1px solid #cbd5e1; margin-top: 0.5rem; }
+        label { color: #64748b; font-weight: 600; font-size: 0.875rem; }
     </style>
 </head>
-<body>
-    <div>
-        <form action="" method="POST">
-            <input type="email" placeholder="email" name="email" class="email" id="email" required>
-            <input type="password" placeholder="password" name="password" class="password" id="password">
-            <input type="submit" class="submit-button">
+<body class="fade-in">
+    <div class="login-container">
+        <h1 style="text-align: center; margin-bottom: 2rem; color: var(--primary-color);">Student Login</h1>
+        
+        <?php if(isset($error)): ?>
+            <p style="color: #ef4444; text-align: center; margin-bottom: 1.5rem;"><?php echo $error; ?></p>
+        <?php endif; ?>
+
+        <form method="POST">
+            <div style="margin-bottom: 1.5rem;">
+                <label>Student Email</label>
+                <input type="email" name="email" placeholder="student@example.com" required>
+            </div>
+            <div style="margin-bottom: 2rem;">
+                <label>Password</label>
+                <input type="password" name="password" placeholder="••••••••" required>
+            </div>
+            <button type="submit" class="btn" style="width: 100%; border: none; cursor: pointer;">Sign In</button>
         </form>
     </div>
 </body>
