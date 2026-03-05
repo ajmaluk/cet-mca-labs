@@ -1,51 +1,58 @@
-#include<stdio.h>
+/**
+ * @file topological_sorting.c
+ * @brief Kahn's Algorithm for Topological Sorting of a DAG.
+ */
 
-#define MAX 100
+#include <stdio.h>
 
-int queue[MAX],inDegree[MAX]={0},topo[MAX],count=0,front = 0, rear = 0;
+#define DAG_MAX 20
 
-int main(){
-    int n=3;
-    int adj[MAX][MAX] = {
-        {0,1,1},
-        {0,0,1},
-        {0,0,0}
-    };
+void run_topological_sort() {
+    int n, head = 0, tail = 0, count = 0;
+    int adj[DAG_MAX][DAG_MAX], in_degree[DAG_MAX] = {0};
+    int node_queue[DAG_MAX], result_order[DAG_MAX];
 
-    for(int i=0;i<n;i++){
-        for(int j = 0;j<n;j++){
-            if(adj[i][j] == 1){
-                inDegree[j]++;
+    printf("--- Topological Sort (DAG) ---");
+    printf("\nTotal Vertices: ");
+    scanf("%d", &n);
+
+    printf("Adjacency Matrix:\n");
+    for (int i = 0; i < n; i++) {
+        for (int j = 0; j < n; j++) {
+            scanf("%d", &adj[i][j]);
+            if (adj[i][j]) in_degree[j]++;
+        }
+    }
+
+    /* Enqueue nodes with zero in-degree */
+    for (int i = 0; i < n; i++) {
+        if (in_degree[i] == 0) node_queue[tail++] = i;
+    }
+
+    while (head < tail) {
+        int u = node_queue[head++];
+        result_order[count++] = u;
+
+        for (int v = 0; v < n; v++) {
+            if (adj[u][v]) {
+                in_degree[v]--;
+                if (in_degree[v] == 0) node_queue[tail++] = v;
             }
         }
     }
 
-    for(int i = 0;i<n;i++){
-        if(inDegree[i] == 0){
-            queue[rear++] = i;
+    if (count != n) {
+        printf("\nCycle detected: Graph is not a Directed Acyclic Graph!\n");
+    } else {
+        printf("\nOrdered Sequence: ");
+        for (int i = 0; i < count; i++) {
+            printf("%d%s", result_order[i], (i == count - 1) ? "" : " -> ");
         }
-    }
-
-    while(front<rear){
-        int vertex = queue[front++];
-        topo[count++] = vertex;
-        for(int i = 0;i< n;i++){
-            if(adj[vertex][i] == 1){
-                inDegree[i]--;
-                if(inDegree[i] == 0){
-                    queue[rear++] = i;
-                }
-            }
-        }
-    }
-
-    if(count != n){
-        printf("The Graph Have Cycle ! ");
-        return 0;
-    }
-
-    for(int i=0;i<count;i++){
-        printf("%d ",topo[i] );
+        printf("\n");
     }
 }
 
+int main() {
+    run_topological_sort();
+    return 0;
+}

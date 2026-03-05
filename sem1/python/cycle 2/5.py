@@ -1,34 +1,32 @@
-print("<=== Construct a Pattern Using Nested Loop ===>")
+"""
+Aim: Write a Python program to construct star patterns using nested loops.
+Course: Python Programming Lab (CET MCA)
+"""
 
-count = int(input("Enter the Count: "))
+def right_triangle(n):
+    print("\n1. Right Angled Triangle:")
+    for i in range(1, n + 1):
+        print("* " * i)
 
-for i in range(count):
-    for j in range(i + 1):
-        print("*", end='')
-    print()
+def pyramid(n):
+    print("\n2. Pyramid Pattern:")
+    for i in range(1, n + 1):
+        print(" " * (n - i) + "* " * i)
 
+def inverted_pyramid(n):
+    print("\n3. Inverted Pyramid:")
+    for i in range(n, 0, -1):
+        print(" " * (n - i) + "* " * i)
 
-print("<=== Next Pattern ===>")
-
-i=j=0
-
-for i in range(count+1):
-    for space in range(count-i):
-        print(" ",end='')
-
-    for star in range(i):
-        print("*",end="")
-    print()
-
-
-
-print("<=== Next Pattern ===>")
-
-for i in range(1, count + 1):
-    for space in range(count - i):
-        print(" ", end='')
-
-    for star in range(2 * i - 1):
-        print("*", end='')
-
-    print() 
+if __name__ == "__main__":
+    print("--- Star Pattern Generator ---")
+    try:
+        rows = int(input("Enter number of rows: "))
+        if rows > 0:
+            right_triangle(rows)
+            pyramid(rows)
+            inverted_pyramid(rows)
+        else:
+            print("Please enter a positive integer.")
+    except ValueError:
+        print("Invalid input! Please enter an integer.")

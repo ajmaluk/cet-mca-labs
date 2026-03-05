@@ -1,13 +1,25 @@
-print("<=== Swap Numbers ===>")
+"""
+Aim: Write a Python program to swap two numbers without using a third variable.
+Course: Python Programming Lab (CET MCA)
+"""
 
-a = int(input("Enter the First Number : "))
-b = int(input("Enter the Second Number : "))
+def swap_numbers(a, b):
+    """Swaps two integers using arithmetic operations."""
+    print(f"\nBefore Swapping: a = {a}, b = {b}")
+    
+    # Arithmetic swap logic
+    a = a + b
+    b = a - b
+    a = a - b
+    
+    print(f"After Swapping : a = {a}, b = {b}")
+    return a, b
 
-print(f"before swap a = {a} and b = {b}")
-
-print("<=== Swaping Numbers ===>")
-a = a+b
-b = a-b
-a = a-b
-
-print(f"after swap a = {a} and b = {b}")
+if __name__ == "__main__":
+    print("--- Variable Swapping (Without Temp) ---")
+    try:
+        val1 = int(input("Enter first integer (a): "))
+        val2 = int(input("Enter second integer (b): "))
+        swap_numbers(val1, val2)
+    except ValueError:
+        print("Please enter valid integers.")

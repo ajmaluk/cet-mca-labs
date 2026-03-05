@@ -1,10 +1,22 @@
-print("<==== Merge Two String Swapping the First Character ====>")
+"""
+Aim: Create a single string from two given strings, separated by a space and swapping the first characters of each string.
+Course: Python Programming Lab (CET MCA)
+"""
 
-string1 = input("Enter First String : ")
-string2 = input("Enter Second String : ")
+def swap_first_chars(s1, s2):
+    """Swaps the first characters of two strings and joins them."""
+    if len(s1) < 1 or len(s2) < 1:
+        return s1 + " " + s2
 
-new_string1 = string2[0] + string1[1:]  
-new_string2 = string1[0] + string2[1:]
+    new_s1 = s2[0] + s1[1:]
+    new_s2 = s1[0] + s2[1:]
+    
+    return f"{new_s1} {new_s2}"
 
-m_string = new_string1 + new_string2
-print("Merged String:", m_string)
+if __name__ == "__main__":
+    print("--- String First Char Swapper ---")
+    str1 = input("Enter first string: ")
+    str2 = input("Enter second string: ")
+    
+    result = swap_first_chars(str1, str2)
+    print(f"Result: {result}")

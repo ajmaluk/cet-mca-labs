@@ -1,88 +1,102 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<stdbool.h>
+/**
+ * @file queue.c
+ * @brief Standard Linear Queue (FIFO) implementation for CET MCA.
+ */
 
-#define Max 100
+#include <stdio.h>
+#include <stdbool.h>
 
+#define QUEUE_MAX 100
 
-int front, rear , maxSize , i , item , option;
-int queue[Max];
+/* Queue state */
+int queue_data[QUEUE_MAX];
+int front_idx = -1;
+int rear_idx = -1;
+int current_capacity = QUEUE_MAX;
 
-void enQueue();
-void decQueue();
-void traversal();
-void search();
+/* Prototypes */
+void add_to_queue();
+void remove_from_queue();
+void display_queue();
+void find_in_queue();
 
-int main(){
-    front = rear = -1;
-    printf("\nEnter the Maximum Size of Queue : ");
-    scanf("%d",&maxSize);
-    while(1){
-        printf("\n\n1.Enqueue\n2.DeQueue\n3.Traversal\n4.Search\n5.Exit\n\nEnter the Option : ");
-        scanf("%d",&option);
-        switch (option)
-        {
-            case 1 : enQueue(); break;
-            case 2 : decQueue(); break;
-            case 3 : traversal(); break;
-            case 4 : search(); break;
-            case 5 : exit(0);
-            default:
-                break;
-        }
-    }
-    return 0;
-}
+int main() {
+    int choice;
+    printf("Initialize Queue size (max %d): ", QUEUE_MAX);
+    scanf("%d", &current_capacity);
+    if (current_capacity > QUEUE_MAX) current_capacity = QUEUE_MAX;
 
+    while (1) {
+        printf("\n--- Linear Queue Dashboard ---");
+        printf("\n1. Enqueue\n2. Dequeue\n3. Display\n4. Search\n5. Exit");
+        printf("\nCommand: ");
+        scanf("%d", &choice);
 
-void enQueue(){
-    if(rear == maxSize-1){
-        printf("\nOverflow");
-    }
-    else{
-        printf("\nEnter the Item to insert it into queue : ");
-        scanf("%d",&item);
-        rear++;
-        queue[rear] = item;
-        printf("\n 'Item inserted Successfully!!'");
-    }
-}
-
-void decQueue(){
-    if(front == -1){
-        printf("\nUnderflow!!");
-    }
-    else{
-        printf("\nItem '%d' removed Successfully!!",queue[front]);
-        if(front == rear){
-            front = -1;
-            rear = -1;
-        }
-        else{
-            front++;
+        switch (choice) {
+            case 1: add_to_queue(); break;
+            case 2: remove_from_queue(); break;
+            case 3: display_queue(); break;
+            case 4: find_in_queue(); break;
+            case 5: return 0;
+            default: printf("\nInvalid Selection.");
         }
     }
 }
 
+void add_to_queue() {
+    int val;
+    if (rear_idx == current_capacity - 1) {
+        printf("\nQueue Overflow: Capacity full.");
+        return;
+    }
+    printf("Value to enqueue: ");
+    scanf("%d", &val);
+    
+    if (front_idx == -1) front_idx = 0;
+    queue_data[++rear_idx] = val;
+    printf("Queued value: %d", val);
+}
 
-void traversal(){
-    printf("\n");
-    for(i = front ; i <= rear; i++){
-        printf("| %d ", queue[i]);
+void remove_from_queue() {
+    if (front_idx == -1) {
+        printf("\nQueue Underflow: No data available.");
+        return;
+    }
+    printf("Dequeued value: %d", queue_data[front_idx]);
+    
+    if (front_idx == rear_idx) {
+        /* Reset state when last element is removed */
+        front_idx = rear_idx = -1;
+    } else {
+        front_idx++;
     }
 }
 
-void search(){
-    printf("\nEnter the Item to Search : ");
-    scanf("%d", &item);
-    bool itemFound = false;
-    for(i=front; i<=rear; i++){
-        if(queue[i] == item){
-            printf("\nItem ' %d ' Found on ' %d ' ",item, i);
-            itemFound = true;
+void display_queue() {
+    if (front_idx == -1) {
+        printf("\n[ [Queue is Empty] ]");
+        return;
+    }
+    printf("\nQueue visualization: [ ");
+    for (int i = front_idx; i <= rear_idx; i++) {
+        printf("%d%s", queue_data[i], (i == rear_idx) ? "" : " | ");
+    }
+    printf(" ]");
+}
+
+void find_in_queue() {
+    int target;
+    bool isFound = false;
+    if (front_idx == -1) { printf("\nQueue is empty."); return; }
+    
+    printf("Search for: ");
+    scanf("%d", &target);
+    
+    for (int i = front_idx; i <= rear_idx; i++) {
+        if (queue_data[i] == target) {
+            printf("\nValue %d found at index %d", target, i);
+            isFound = true;
         }
     }
-    if(!itemFound){
-        printf("Item Not Found in Queue");
-    }
+    if (!isFound) printf("\nValue %d not present.", target);
 }

@@ -1,98 +1,112 @@
+/**
+ * @file stack_using_list.c
+ * @brief Dynamic Stack implementation using a Singly Linked List.
+ */
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
 
-struct node {
+typedef struct node {
     int data;
-    struct node *link;
-};
+    struct node *next;
+} Node;
 
-struct node *top = NULL;
+/* Pointer to the top of stack */
+Node *stack_top = NULL;
 
-void push();
-void pop();
-void traversal();
-void search();
+/* Prototypes */
+Node* create_node(int val);
+void push_dynamic();
+void pop_dynamic();
+void display_dynamic();
+void search_dynamic();
 
 int main() {
-    int option;
-    while(1){
-        printf("\n\n1.Push\n2.Pop\n3.Traversal\n4.Search\n5.Exit\n\nEnter the Option : ");
-        scanf("%d", &option);
-        switch (option) {
-            case 1: push(); break;
-            case 2: pop(); break;
-            case 3: traversal(); break;
-            case 4: search(); break;
+    int choice;
+    printf("--- Dynamic Stack (Refined) ---");
+    
+    while (1) {
+        printf("\n1. Push\n2. Pop\n3. Display\n4. Search\n5. Exit");
+        printf("\nAction: ");
+        if (scanf("%d", &choice) != 1) break;
+
+        switch (choice) {
+            case 1: push_dynamic(); break;
+            case 2: pop_dynamic(); break;
+            case 3: display_dynamic(); break;
+            case 4: search_dynamic(); break;
             case 5: exit(0);
-            default: printf("Invalid Option\n");
+            default: printf("\nChoice Error!");
         }
     }
     return 0;
 }
 
-void push() {
-    struct node *ptr = (struct node*)malloc(sizeof(struct node));
-    if(ptr == NULL){
-        printf("\nStack Overflow");
-        return;
+Node* create_node(int val) {
+    Node *newNode = (Node*)malloc(sizeof(Node));
+    if (!newNode) {
+        printf("\nFatal: Memory Overflow!");
+        exit(1);
     }
-    int item;
-    printf("\nEnter the Item to Enter : ");
-    scanf("%d", &item);
-    ptr->data = item;
-    ptr->link = top;
-    top = ptr;
-    printf("Item pushed: %d\n", item);
+    newNode->data = val;
+    newNode->next = NULL;
+    return newNode;
 }
 
-void pop() {
-    if(top == NULL){
-        printf("\nStack Underflow! No elements to pop.\n");
-        return;
-    }
-    struct node *ptr = top;
-    int popped_item = ptr->data;
-    top = top->link;
-    free(ptr);
-    printf("\nPopped item: %d\n", popped_item);
+void push_dynamic() {
+    int val;
+    printf("Value to push: ");
+    scanf("%d", &val);
+    
+    Node *newNode = create_node(val);
+    newNode->next = stack_top;
+    stack_top = newNode;
+    printf("Value %d pushed into stack.", val);
 }
 
-void traversal() {
-    if(top == NULL){
-        printf("\nStack is empty.\n");
+void pop_dynamic() {
+    if (stack_top == NULL) {
+        printf("\nUnderflow: Stack is empty.");
         return;
     }
-    struct node *ptr = top;
-    printf("\nStack from top to bottom:\n");
-    while(ptr != NULL){
-        printf("| %d | ", ptr->data);
-        ptr = ptr->link;
-    }
-    printf("\n");
+    Node *to_free = stack_top;
+    int data = to_free->data;
+    stack_top = stack_top->next;
+    free(to_free);
+    printf("Value %d popped from stack.", data);
 }
 
-void search() {
-    if(top == NULL){
-        printf("\nStack is empty.\n");
+void display_dynamic() {
+    if (stack_top == NULL) {
+        printf("\nStack status: Empty.");
         return;
     }
-    int item, pos = 1;
-    bool itemFound = false;
-    printf("\nEnter the Item to Search : ");
-    scanf("%d", &item);
+    Node *current = stack_top;
+    printf("\nStack Structure (Vertical View):\n");
+    while (current) {
+        printf("| %3d |\n", current->data);
+        printf("-------\n");
+        current = current->next;
+    }
+}
 
-    struct node *ptr = top;
-    while(ptr != NULL){
-        if(ptr->data == item){
-            printf("\nItem Found at position %d from top.\n", pos);
-            itemFound = true;
-            break;
+void search_dynamic() {
+    if (stack_top == NULL) return;
+    int target, depth = 1;
+    bool found = false;
+    Node *current = stack_top;
+
+    printf("Search for value: ");
+    scanf("%d", &target);
+
+    while (current) {
+        if (current->data == target) {
+            printf("\nFound %d at level %d from top.", target, depth);
+            found = true;
         }
-        ptr = ptr->link;
-        pos++;
+        current = current->next;
+        depth++;
     }
-    if(!itemFound){
-        printf("\nItem not found in the stack.\n");
-    }
+    if (!found) printf("\nValue %d not in stack.", target);
 }

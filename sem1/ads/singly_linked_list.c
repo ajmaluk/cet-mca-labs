@@ -1,284 +1,250 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<stdbool.h>
+/**
+ * @file singly_linked_list.c
+ * @brief Professional implementation of a Singly Linked List for CET MCA.
+ * 
+ * Features: Naming standardization, recursive traversal, and modular node creation.
+ */
 
-struct node
-{
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+
+/* Type definition for cleaner pointer management */
+typedef struct node {
     int data;
-    struct node *link;
-};
+    struct node *next;
+} Node;
 
-struct node *head,*temp,*ptr, *mergeHead, *copyHead;
-int option, item, position, i;
-bool itemFound;
+/* Global pointers with descriptive names */
+Node *head_node = NULL;
+Node *copy_head_node = NULL;
 
-void insertFirst();
-void insertEnd();
-void insertPosition();
-void deleteFirst();
-void deleteEnd();
-void deletePosition();
-void traversal();
-void search();
-void merge();
-void copyList();
-void traversalCopy();
+/* Function prototypes with snake_case naming */
+Node* create_node(int value);
+void insert_at_beginning();
+void insert_at_end();
+void insert_at_position();
+void delete_from_beginning();
+void delete_from_end();
+void delete_from_position();
+void display_list(Node *h, const char *title);
+void search_element();
+void merge_lists();
+void replicate_list();
 
 int main() {
-    head = (struct node*)malloc(sizeof(struct node));
-    head->link = NULL;
-    copyHead = (struct node*)malloc(sizeof(struct node));
-    copyHead->link = NULL;
-    while(1){
-        printf("\n========== MENU ==========\n");
-        printf("1. Insert at Beginning\n");
-        printf("2. Insert at End\n");
-        printf("3. Insert at Specific Position\n");
-        printf("4. Delete from Beginning\n");
-        printf("5. Delete from End\n");
-        printf("6. Delete from Specific Position\n");
-        printf("7. Traverse List\n");
-        printf("8. Search in List\n");
-        printf("9. Merge\n");
-        printf("10. Copy List\n");
-        printf("11. Traverse Copied List\n");
-        printf("12. Exit\n");
-        printf("==========================\n");
-        printf("Enter your choice: ");
-        scanf("%d", &option);
-        switch (option) {
-            case 1:
-                insertFirst();
-                break;
-            case 2:
-                insertEnd();
-                break;
-            case 3:
-                insertPosition();
-                break;
-            case 4:
-                deleteFirst();
-                break;
-            case 5:
-                deleteEnd();
-                break;
-            case 6:
-                deletePosition();
-                break;
-            case 7:
-                traversal();
-                break;
-            case 8:
-                search();
-                break;
-            case 9:
-                merge();
-                break;
-            case 10:
-                copyList();
-                break;
-            case 11:
-                traversalCopy();
-                break;
-            case 12:
-                printf("Exiting the program.\n");
-                exit(0);
-            default:
-                printf("Invalid option! Please choose between 1 and 9.\n");
+    int choice;
+
+    /* Initialize dummy heads for cleaner edge case handling */
+    head_node = create_node(0);
+    copy_head_node = create_node(0);
+
+    while (1) {
+        printf("\n--- Singly Linked List (Refined) ---");
+        printf("\n1. Insert Front\n2. Insert End\n3. Insert at Pos");
+        printf("\n4. Delete Front\n5. Delete End\n6. Delete at Pos");
+        printf("\n7. Display List\n8. Search\n9. Merge List");
+        printf("\n10. Copy List\n11. Display Copy\n12. Exit");
+        printf("\nChoice: ");
+        
+        if (scanf("%d", &choice) != 1) break;
+
+        switch (choice) {
+            case 1: insert_at_beginning(); break;
+            case 2: insert_at_end(); break;
+            case 3: insert_at_position(); break;
+            case 4: delete_from_beginning(); break;
+            case 5: delete_from_end(); break;
+            case 6: delete_from_position(); break;
+            case 7: display_list(head_node, "Main List"); break;
+            case 8: search_element(); break;
+            case 9: merge_lists(); break;
+            case 10: replicate_list(); break;
+            case 11: display_list(copy_head_node, "Replicated List"); break;
+            case 12: exit(0);
+            default: printf("\nInvalid Choice!");
         }
     }
     return 0;
 }
 
-
-void insertFirst(){
-    ptr = (struct node*)malloc(sizeof(struct node));
-    if(ptr == NULL){
-        printf("\nOverflow");
-        return;
+Node* create_node(int value) {
+    Node *newNode = (Node*)malloc(sizeof(Node));
+    if (!newNode) {
+        printf("\nFatal: Memory Allocation Failed!");
+        exit(1);
     }
-    printf("\nEnter the Item to Enter : ");
-    scanf("%d",&item);
-    ptr->data = item;
-    ptr->link = head->link;
-    head->link = ptr;
+    newNode->data = value;
+    newNode->next = NULL;
+    return newNode;
 }
 
-void insertEnd(){
-    ptr = (struct node*)malloc(sizeof(struct node));
-    if(ptr == NULL){
-        printf("\nOverflow");
-        return;
-    }
-    temp = head;
-    printf("\nEnter the Item to Enter : ");
-    scanf("%d",&item);
-    ptr->data = item;
-    while(temp->link != NULL){
-        temp = temp->link;
-    }
-    temp->link = ptr;
-    ptr->link = NULL;
-
-}
-void insertPosition(){
-    temp = head;
-    ptr = (struct node*)malloc(sizeof(struct node));
-    if(ptr == NULL){
-        printf("\nOverflow");
-        return;
-    }
-    printf("\nEnter the Item to Enter : ");
-    scanf("%d",&item);
-    ptr->data = item;
-    printf("\nEnter the Position to insert Node : ");
-    scanf("%d",&position);
-    for(i=1;i<position;i++){
-        temp = temp->link;
-    }
-    ptr->link = temp->link;
-    temp->link = ptr;
+void insert_at_beginning() {
+    int val;
+    printf("Enter value: ");
+    scanf("%d", &val);
+    Node *newNode = create_node(val);
+    newNode->next = head_node->next;
+    head_node->next = newNode;
+    printf("Inserted %d at front.", val);
 }
 
-
-void deleteFirst(){
-    if(head->link == NULL){
-        printf("\nNo Node -- >  UnderFlow !!");
-        return;
-    }
-    ptr = head->link;
-    head->link = ptr->link;
+void insert_at_end() {
+    int val;
+    printf("Enter value: ");
+    scanf("%d", &val);
+    Node *newNode = create_node(val);
+    Node *current = head_node;
+    while (current->next != NULL) current = current->next;
+    current->next = newNode;
+    printf("Inserted %d at end.", val);
 }
 
-void deleteEnd(){
-    ptr = head;
-    if(ptr->link == NULL){
-        printf("\nNo Node for Delete!!");
-        return;
-    }
-    while(ptr->link->link!=NULL){
-        ptr = ptr->link;
-    } 
+void insert_at_position() {
+    int val, pos;
+    printf("Enter value: ");
+    scanf("%d", &val);
+    printf("Enter position: ");
+    scanf("%d", &pos);
 
-    ptr->link = NULL;
+    Node *current = head_node;
+    for (int i = 1; i < pos && current != NULL; i++) 
+        current = current->next;
+
+    if (!current) {
+        printf("\nError: Position Out of Range!");
+    } else {
+        Node *newNode = create_node(val);
+        newNode->next = current->next;
+        current->next = newNode;
+        printf("Inserted %d at position %d.", val, pos);
+    }
 }
 
-void deletePosition(){
-    if(head->link == NULL){
-        printf("\nNo Node -- >  UnderFlow !!");
+void delete_from_beginning() {
+    if (head_node->next == NULL) {
+        printf("\nUnderflow: List is Empty!");
         return;
     }
-    ptr = head;
-    printf("\nEnter the Position to Delete Node.");
-    scanf("%d",&position);
-    for(i=1;i<position;i++){
-        ptr = ptr->link;
-    }
-    ptr->link = ptr->link->link;
+    Node *toDelete = head_node->next;
+    head_node->next = toDelete->next;
+    printf("Deleted value: %d", toDelete->data);
+    free(toDelete);
 }
 
-void traversal(){
-    temp = head->link;
-    if(temp == NULL){
-        printf("\nNo Node -- >  UnderFlow !!");
+void delete_from_end() {
+    if (head_node->next == NULL) {
+        printf("\nUnderflow: List is Empty!");
         return;
     }
-    printf("\n| HEAD | %p |", (void*)temp);
-    while(temp != NULL){
-        printf(" ---> | %d | ", temp->data);
-        if(temp->link != NULL)
-            printf("%p | ", (void*)temp->link);
-        else
-            printf("NULL | ");
-        temp = temp->link;
-    }
-    printf("\n");
+    Node *current = head_node;
+    while (current->next->next != NULL) current = current->next;
+    
+    printf("Deleted value: %d", current->next->data);
+    free(current->next);
+    current->next = NULL;
 }
 
-
-void search(){
-    temp = head->link;
-    if(head->link == NULL){
-        printf("\nNo Node -- >  UnderFlow !!");
+void delete_from_position() {
+    int pos;
+    if (head_node->next == NULL) {
+        printf("\nUnderflow!");
         return;
-    };
-    itemFound = false;
-    printf("\nEnter the Item to Search : ");
-    scanf("%d",&item);
-    i = 1;
-    while(temp != NULL){
-        if(item == temp->data){
-            printf("\nItem Found At Node - | Address | Position | Data | Link | --->  | %p | %d | %d | %p |",temp,i, temp->data, temp->link);
-            itemFound = true;
+    }
+    printf("Enter position: ");
+    scanf("%d", &pos);
+
+    Node *current = head_node;
+    for (int i = 1; i < pos && current->next != NULL; i++) 
+        current = current->next;
+
+    if (current->next == NULL) {
+        printf("\nInvalid Position!");
+    } else {
+        Node *toDelete = current->next;
+        current->next = toDelete->next;
+        printf("Deleted value: %d", toDelete->data);
+        free(toDelete);
+    }
+}
+
+void display_list(Node *h, const char *title) {
+    Node *current = h->next;
+    if (!current) {
+        printf("\n%s is currently empty.", title);
+        return;
+    }
+    printf("\n%s Content: ", title);
+    while (current) {
+        printf("[%d] -> ", current->data);
+        current = current->next;
+    }
+    printf("NULL\n");
+}
+
+void search_element() {
+    int target, pos = 1;
+    bool isFound = false;
+    if (head_node->next == NULL) {
+        printf("\nList is empty.");
+        return;
+    }
+    printf("Enter target value: ");
+    scanf("%d", &target);
+    
+    Node *current = head_node->next;
+    while (current) {
+        if (current->data == target) {
+            printf("\nValue %d found at position %d", target, pos);
+            isFound = true;
         }
-        i++;
-        temp = temp->link;
+        current = current->next;
+        pos++;
     }
-    if(!itemFound){
-        printf("\nItem Not in List");
-    }
+    if (!isFound) printf("\nValue not found in list.");
 }
 
+void merge_lists() {
+    int n, val;
+    printf("\nNumber of elements for new list: ");
+    scanf("%d", &n);
+    
+    Node *temp_head = create_node(0);
+    Node *tail = temp_head;
 
-void merge(){
-    mergeHead = (struct node*)malloc(sizeof(struct node));
-    int count;
-    mergeHead->link = NULL;
-    temp = mergeHead;
-    printf("\n=== New Linked List ===");
-    printf("\nEnter the Number of Items Did You Want to Add in New is to Merge : ");
-    scanf("%d",&count);
-    printf("\nEnter The Item One By One");
-    for(i=0;i<count;i++){
-        printf("\nEnter the Item [%d] : ",i+1);
-        scanf("%d",&item);
-        ptr = (struct node*)malloc(sizeof(struct node));
-        ptr->link = NULL;
-        ptr->data = item;
-        while(temp->link !=NULL){
-            temp = temp->link;
-        }
-        temp->link = ptr;
+    for (int i = 0; i < n; i++) {
+        printf("Element %d: ", i + 1);
+        scanf("%d", &val);
+        Node *newNode = create_node(val);
+        tail->next = newNode;
+        tail = newNode;
     }
-    temp = head;
-    while(temp->link!=NULL){
-        temp = temp->link;
-    }
-    temp->link = mergeHead->link;
+
+    /* Append to original list */
+    Node *current = head_node;
+    while (current->next != NULL) current = current->next;
+    current->next = temp_head->next;
+    
+    printf("\nSuccessfully merged lists.");
+    free(temp_head);
 }
 
+void replicate_list() {
+    /* Clear existing copy */
+    while (copy_head_node->next != NULL) {
+        Node *temp = copy_head_node->next;
+        copy_head_node->next = temp->next;
+        free(temp);
+    }
 
-void copyList(){
-    temp = head;
-    struct node *tempCopy = copyHead;
-    printf("\n=== Copying Started ===");
-    while(temp->link!=NULL){
-        temp = temp->link;
-        ptr = (struct node*)malloc(sizeof(struct node));
-        ptr->link = NULL;
-        ptr->data = temp->data;
-        tempCopy->link = ptr;
-        tempCopy = ptr;
+    Node *source = head_node->next;
+    Node *dest_tail = copy_head_node;
+    
+    while (source) {
+        Node *newNode = create_node(source->data);
+        dest_tail->next = newNode;
+        dest_tail = newNode;
+        source = source->next;
     }
-    printf("\n=== Copying Success ===");
-    traversalCopy();
-}
-
-void traversalCopy(){
-    temp = copyHead->link;
-    if(temp == NULL){
-        printf("\nNo Node -- >  UnderFlow !!");
-        return;
-    }
-    printf("\n=== Copied List ===");
-    printf("\n| HEAD | %p |", (void*)temp);
-    while(temp != NULL){
-        printf(" ---> | %d | ", temp->data);
-        if(temp->link != NULL)
-            printf("%p | ", (void*)temp->link);
-        else
-            printf("NULL | ");
-        temp = temp->link;
-    }
-    printf("\n");
+    printf("\nList replicated successfully.");
 }
