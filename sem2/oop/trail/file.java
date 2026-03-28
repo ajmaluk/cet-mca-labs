@@ -1,4 +1,5 @@
 
+
 import mypackage.FileReaderUtil;
 import mypackage.PackageDemo;
 
@@ -11,6 +12,5 @@ public class file {
         String filename = "file.txt";
         System.out.println("Reading from file: " + filename);
         FileReaderUtil.readFile(filename);
-    }
     }
 }
