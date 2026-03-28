@@ -24,6 +24,29 @@ This directory contains the implementations of various advanced data structures 
 
 ---
 
+
+## 📝 Notes & Best Practices
+- Always check the return value of malloc and free memory after use.
+- Use descriptive variable and function names for clarity.
+- Add comments for complex logic and edge cases.
+- Test your code with different input cases, including edge cases.
+- For large graphs or lists, check for stack/queue overflow.
+
+## 📊 Sample Output (Example)
+```
+$ gcc stack.c -o stack
+$ ./stack
+--- Stack Operations ---
+1. Push
+2. Pop
+3. Display
+4. Exit
+Choice: 1
+Enter value: 10
+Pushed 10 onto stack.
+... (rest of output)
+```
+
 ## 🛠 Compilation and Execution
 To compile any experiment, use the `gcc` compiler:
 ```bash
@@ -34,5 +57,5 @@ gcc filename.c -o output
 ## 📚 Syllabus Alignment
 These programs are aligned with the **Lab-MCA105: Advanced Data Structures Lab** syllabus for students at the **College of Engineering Trivandrum**.
 
----
+----
 *Maintained by Ajmal UK.*

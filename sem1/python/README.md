@@ -30,8 +30,29 @@ Ensure you have Python 3.x installed. Run any program using:
 python3 filename.py
 ```
 
+
+## 📝 Notes & Best Practices
+- Use docstrings and comments to explain your code, especially for complex logic.
+- Use try/except for user input and file operations to handle errors gracefully.
+- Prefer list comprehensions and built-in functions for clarity and efficiency.
+- Test your code with different input values, including edge cases.
+- For data science cycles, ensure required packages (NumPy, Matplotlib) are installed:
+	```bash
+	pip install numpy matplotlib
+	```
+
+## 📊 Sample Output (Example)
+```
+$ python3 1.py
+--- Circle Geometry Calculator ---
+Enter the radius of the circle: 5
+Results for Circle with Radius 5.0:
+Area      : 78.54 sq. units
+Perimeter : 31.42 units
+```
+
 ## 📚 Syllabus Reference
 Aligned with **Lab-MCA107: Python Programming Lab** for **College of Engineering Trivandrum (CET)**.
 
----
+----
 *Maintained by Ajmal UK.*

@@ -37,8 +37,33 @@ Modern web development lab exercises focusing on responsive design and PHP-based
 2. **Navigate to Subject**: Enter the desired folder (e.g., `cd sem1/ads`) to find specific experiments.
 3. **Follow the READMEs**: Each sub-folder contains its own detailed documentation for setup and execution.
 
+
+## 📝 Notes & Best Practices
+- Always read the README in each subfolder before starting an experiment.
+- For C programs, check memory allocation and always free memory after use.
+- For Python, use try/except for user input and file operations.
+- For web projects, validate HTML/CSS and use semantic tags for accessibility.
+- Use descriptive variable and function names for clarity.
+- Document your code with comments, especially for complex logic.
+- Refer to syllabus alignment in each lab's README for exam preparation.
+
+## 📊 Sample Output (Example)
+```
+$ gcc ads/stack.c -o stack
+$ ./stack
+--- Stack Operations ---
+1. Push
+2. Pop
+3. Display
+4. Exit
+Choice: 1
+Enter value: 10
+Pushed 10 onto stack.
+... (rest of output)
+```
+
 ## 🔍 SEO Keywords
 `CET MCA Labs`, `College of Engineering Trivandrum MCA`, `S1 MCA Lab Manual`, `ADS Lab CET`, `Python Lab CET MCA`, `Web Technology Lab CET`, `MCA Lab Source Code`, `CET MCA Study Materials`.
 
----
+----
 *Created and maintained by [Ajmal UK](https://github.com/ajmaluk) for the CET MCA community.*
