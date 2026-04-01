@@ -1,0 +1,13 @@
+# Creation 
+python -m venv myenv
+
+# Activation
+myenv\Scripts\activate -- Windows
+source myenv/bin/activate -- Mac/Linux
+
+# Verification
+where python
+which python
+
+# Deactivation
+deactivate
