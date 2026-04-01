@@ -1,71 +1,98 @@
+/**
+ * @file kruskal_algorithm.c
+ * @brief Implementation of Kruskal's MST algorithm for CET MCA.
+ * 
+ * Uses a greedy approach with Disjoint Set Union (DSU) to find the MST.
+ */
+
 #include <stdio.h>
-#define MAX 10
-#define INF 9999
+#include <stdlib.h>
 
-int parent[MAX];
+#define MAX_NODES 20
+#define INF_WEIGHT 9999
 
-int find(int i) {
-    while (parent[i] != i) {
-        i = parent[i];
-    }
-    return i;
+int set_parent[MAX_NODES];
+
+/**
+ * @brief Find the root of a set with path compression.
+ */
+int find_root(int i) {
+    if (set_parent[i] == i) return i;
+    return set_parent[i] = find_root(set_parent[i]);
 }
 
-void unionSet(int i, int j) {
-    int a = find(i);
-    int b = find(j);
-    parent[a] = b;
+/**
+ * @brief Union of two sets by root assignment.
+ */
+void unite_sets(int i, int j) {
+    int root_a = find_root(i);
+    int root_b = find_root(j);
+    if (root_a != root_b) set_parent[root_a] = root_b;
 }
 
 int main() {
-    int n = 4;
-    int cost[MAX][MAX] = {
-        {0, 10, 20, 0},
-        {10, 0, 5, 0},
-        {20, 5, 0, 10},
-        {0, 0, 10, 0}
-    };
+    int n, edge_idx = 0;
+    int mst_weight = 0, edges_count = 0;
+    int cost_matrix[MAX_NODES][MAX_NODES];
     
-    int weight[MAX][3];
-    int costMST = 0, edgesAccepted = 0;
-    int e = 0;  
+    /* Edge representation: node1, node2, weight */
+    int edge_list[MAX_NODES * MAX_NODES][3];
+
+    printf("--- Kruskal's MST Logic ---");
+    printf("\nEnter node count: ");
+    scanf("%d", &n);
+
+    printf("Enter Cost Adjacency Matrix (0 for no edge):\n");
     for (int i = 0; i < n; i++) {
-        for (int j = i + 1; j < n; j++) {
-            if (cost[i][j] != 0) {
-                weight[e][0] = i;
-                weight[e][1] = j;
-                weight[e][2] = cost[i][j];
-                e++;
+        for (int j = 0; j < n; j++) {
+            scanf("%d", &cost_matrix[i][j]);
+            /* Store only once for undirected edges */
+            if (j > i && cost_matrix[i][j] != 0) {
+                edge_list[edge_idx][0] = i;
+                edge_list[edge_idx][1] = j;
+                edge_list[edge_idx][2] = cost_matrix[i][j];
+                edge_idx++;
             }
         }
     }
 
-    for (int i = 0; i < n; i++) {
-        parent[i] = i;
-    }
+    /* Initial DSU state */
+    for (int i = 0; i < n; i++) set_parent[i] = i;
 
-    while (edgesAccepted < n - 1) {
-        int min = INF, a, b, u = -1;
+    printf("\nMST Selected Edges:\n");
+    while (edges_count < n - 1) {
+        int min_val = INF_WEIGHT;
+        int u = -1, v = -1, target_idx = -1;
 
-        for (int i = 0; i < e; i++) {
-            if (weight[i][2] < min) {
-                min = weight[i][2];
-                a = weight[i][0];
-                b = weight[i][1];
-                u = i;
+        /* Find globally minimum edge among remaining edges */
+        for (int i = 0; i < edge_idx; i++) {
+            if (edge_list[i][2] < min_val) {
+                min_val = edge_list[i][2];
+                u = edge_list[i][0];
+                v = edge_list[i][1];
+                target_idx = i;
             }
         }
 
-        if (find(a) != find(b)) {
-            printf("%d - %d : %d\n", a, b, min);
-            costMST += min;
-            edgesAccepted++;
-            unionSet(a, b);
+        if (target_idx == -1) break; /* No more edges */
+
+        /* If doesn't form a cycle */
+        if (find_root(u) != find_root(v)) {
+            printf("[%d] -- [%d] (Weight: %d)\n", u, v, min_val);
+            mst_weight += min_val;
+            edges_count++;
+            unite_sets(u, v);
         }
 
-        weight[u][2] = INF;
+        /* Eliminate edge from further consideration */
+        edge_list[target_idx][2] = INF_WEIGHT;
     }
 
-    printf("Minimum cost = %d\n", costMST);
+    if (edges_count < n - 1) {
+        printf("\nWarning: Disconnected graph detected. MST is incomplete.\n");
+    } else {
+        printf("\nTotal Kruskal MST Weight: %d\n", mst_weight);
+    }
+
     return 0;
 }

@@ -1,12 +1,23 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Frameset Experiment - CET MCA Lab</title>
+    <meta name="description" content="Educational demonstration of HTML Framesets for CET MCA Semester 1.">
+    <meta name="keywords" content="CET MCA, Web Lab, HTML Frames, MCA Lab, College of Engineering Trivandrum">
+    <!-- Note: Frameset is deprecated in HTML5 but retained for educational purposes -->
 </head>
-<frameset cols="30%,70%">
-    <frame src="./frame/sidebar.html" name="sideBar">
-    <frame src="./program2/personal_details.html" name="frameview">
+<frameset cols="280px, *">
+    <frame src="./frame/sidebar.html" name="sideBar" frameborder="0">
+        <frame src="./program2/personal_details.html" name="frameview" frameborder="0">
+            <noframes>
+
+                <body>
+                    <p>Your browser does not support frames. Please use a modern browser.</p>
+                </body>
+            </noframes>
 </frameset>
+
 </html>

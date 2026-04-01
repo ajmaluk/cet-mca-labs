@@ -1,69 +1,86 @@
 <?php
-$conn = mysqli_connect("localhost", "root", "", "ajmal");
+    $conn = mysqli_connect("localhost", "root", "", "ajmal");
+    if (!$conn) { die("DB Connection failed"); }
 
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-    
-}
+    $msg = '';
+    $type = '';
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $rollno = $_POST['rollno'];
-    $mark1 = $_POST['mark1'];
-    $mark2 = $_POST['mark2'];
-    $mark3 = $_POST['mark3'];
+    if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+        $rollno = mysqli_real_escape_string($conn, $_POST['rollno']);
+        $m1 = (int)$_POST['mark1'];
+        $m2 = (int)$_POST['mark2'];
+        $m3 = (int)$_POST['mark3'];
 
-    if (!empty($rollno) && $mark1 !== '' && $mark2 !== '' && $mark3 !== '') {
-        $check_query = "SELECT * FROM mark WHERE rollno = '$rollno'";
-        $result = mysqli_query($conn, $check_query);
-
-        if (mysqli_num_rows($result) > 0) {
-            $update_query = "UPDATE mark 
-                             SET mark1 = '$mark1', mark2 = '$mark2', mark3 = '$mark3' 
-                             WHERE rollno = '$rollno'";
-            if (mysqli_query($conn, $update_query)) {
-                echo "<script>alert('Marks updated successfully!');</script>";
-            } else {
-                echo "<script>alert('Error updating marks: " . mysqli_error($conn) . "');</script>";
-            }
+        $check = mysqli_query($conn, "SELECT * FROM mark WHERE rollno = '$rollno'");
+        if (mysqli_num_rows($check) > 0) {
+            $sql = "UPDATE mark SET mark1 = $m1, mark2 = $m2, mark3 = $m3 WHERE rollno = '$rollno'";
+            $msg = "Academic marks updated successfully!";
         } else {
-            $insert_query = "INSERT INTO mark (rollno, mark1, mark2, mark3) 
-                             VALUES ('$rollno', '$mark1', '$mark2', '$mark3')";
-            if (mysqli_query($conn, $insert_query)) {
-                echo "<script>alert('Marks added successfully!');</script>";
-            } else {
-                echo "<script>alert('Error inserting marks: " . mysqli_error($conn) . "');</script>";
-            }
+            $sql = "INSERT INTO mark (rollno, mark1, mark2, mark3) VALUES ('$rollno', $m1, $m2, $m3)";
+            $msg = "New marks recorded for student #$rollno";
         }
-    } else {
-        echo "<p style='color:red;'>Please fill all fields!</p>";
+        
+        if (mysqli_query($conn, $sql)) { $type = 'success'; }
+        else { $msg = "Error: " . mysqli_error($conn); $type = 'error'; }
     }
-}
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Marks</title>
+    <link rel="stylesheet" href="../../../styles/main.css">
+    <style>
+        body { padding: 2rem; background: transparent; }
+        .mark-form-card { max-width: 500px; margin: 0 auto; background: white; padding: 2.5rem; border-radius: var(--border-radius); box-shadow: var(--shadow); }
+        .form-group { margin-bottom: 1.25rem; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: 700; color: var(--text-color); font-size: 0.875rem; }
+        input[type="number"], select { width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 8px; }
+        .alert { padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; text-align: center; font-weight: 600; }
+        .alert-success { background: #dcfce7; color: #166534; }
+        .alert-error { background: #fee2e2; color: #991b1b; }
+    </style>
+</head>
+<body class="fade-in">
+    <div class="mark-form-card">
+        <h2 style="margin-bottom: 1.5rem;">Grade Management</h2>
+        
+        <?php if($msg): ?>
+            <div class="alert alert-<?php echo $type; ?>"><?php echo $msg; ?></div>
+        <?php endif; ?>
 
-<h2>Add / Update Student Marks</h2>
+        <form method="POST">
+            <div class="form-group">
+                <label>Target Student</label>
+                <select name="rollno" required>
+                    <option value="" disabled selected>Identify student...</option>
+                    <?php
+                        $res = mysqli_query($conn, "SELECT rollno, name FROM student");
+                        while ($row = mysqli_fetch_assoc($res)) {
+                            echo "<option value='".$row['rollno']."'>#".$row['rollno']." - ".$row['name']."</option>";
+                        }
+                    ?>
+                </select>
+            </div>
 
-<form method="POST">
-    <label>Select Roll No:</label><br>
-    <select name="rollno" required>
-        <option value="">-- Select Roll No --</option>
-        <?php
-        $result = mysqli_query($conn, "SELECT rollno, name FROM student");
-        while ($row = mysqli_fetch_assoc($result)) {
-            echo "<option value='" . $row['rollno'] . "'>" . $row['rollno'] . " - " . htmlspecialchars($row['name']) . "</option>";
-        }
-        ?>
-    </select><br><br>
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                <div class="form-group">
+                    <label>Theory</label>
+                    <input type="number" name="mark1" min="0" max="100" placeholder="0-100" required>
+                </div>
+                <div class="form-group">
+                    <label>Practical</label>
+                    <input type="number" name="mark2" min="0" max="100" placeholder="0-100" required>
+                </div>
+                <div class="form-group">
+                    <label>Internal</label>
+                    <input type="number" name="mark3" min="0" max="100" placeholder="0-100" required>
+                </div>
+            </div>
 
-    <label>Mark 1:</label><br>
-    <input type="number" name="mark1" required><br><br>
-
-    <label>Mark 2:</label><br>
-    <input type="number" name="mark2" required><br><br>
-
-    <label>Mark 3:</label><br>
-    <input type="number" name="mark3" required><br><br>
-
-    <input type="submit" value="Save">
-</form>
-
-<?php mysqli_close($conn); ?>
+            <button type="submit" class="btn" style="width: 100%; margin-top: 1rem; border: none; cursor: pointer;">Commit Grades</button>
+        </form>
+    </div>
+</body>
+</html>

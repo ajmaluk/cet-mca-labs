@@ -1,174 +1,154 @@
-#include<stdio.h>
-#include<stdlib.h>
+/**
+ * @file bst.c
+ * @brief Binary Search Tree (BST) implementation for CET MCA.
+ * 
+ * Includes insertion, deletion (3 cases), and recursive traversals.
+ */
 
-struct node{
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct node {
     int data;
-    struct node *left,*right;
-};
+    struct node *left;
+    struct node *right;
+} TreeNode;
 
-struct node *ROOT = NULL;
+/* Global root pointer */
+TreeNode *root_node = NULL;
 
+/* Prototypes */
+TreeNode* create_tree_node(int val);
+TreeNode* insert_recursive(TreeNode* root, int val);
+TreeNode* delete_recursive(TreeNode* root, int val);
+TreeNode* find_min_node(TreeNode* node);
+void traverse_pre_order(TreeNode* root);
+void traverse_in_order(TreeNode* root);
+void traverse_post_order(TreeNode* root);
+void handle_traversal_menu();
 
-void insert(int item);
-void delete(int item);
-void traversal();
+int main() {
+    int choice, val;
+    printf("--- Binary Search Tree (BST) Hub ---");
+    
+    while (1) {
+        printf("\n\n1. Insert Value\n2. Delete Value\n3. View Traversal\n4. Exit");
+        printf("\nAction: ");
+        if (scanf("%d", &choice) != 1) break;
 
-
-void preOrder(struct node *ptr){
-    if(ptr!=NULL){
-        printf("%d ",ptr->data);
-        preOrder(ptr->left);
-        preOrder(ptr->right);
-    }
-}
-
-void inOrder(struct node *ptr){
-    if(ptr!=NULL){
-        inOrder(ptr->left);
-        printf("%d ",ptr->data);
-        inOrder(ptr->right);
-    }
-}
-
-void postOrder(struct node *ptr){
-    if(ptr!=NULL){
-        postOrder(ptr->left);
-        postOrder(ptr->right);
-        printf("%d ",ptr->data);
-    }
-}
-
-int main(){
-    int op;
-    int item;
-    while(1){ 
-        printf("\nEnter the Option : \n1.Insert\n2.Delete\n3.Traversal\n4.Exit");
-        scanf("%d",&op);
-        if(op == 1 || op == 2){
-            printf("\nEnter the Item to ");
-            if(op == 1) printf("Insert");
-            else printf("Delete");
-            scanf("%d",&item);
+        switch (choice) {
+            case 1:
+                printf("Enter value: ");
+                scanf("%d", &val);
+                root_node = insert_recursive(root_node, val);
+                break;
+            case 2:
+                printf("Enter value: ");
+                scanf("%d", &val);
+                root_node = delete_recursive(root_node, val);
+                break;
+            case 3:
+                handle_traversal_menu();
+                break;
+            case 4:
+                exit(0);
+            default:
+                printf("\nSelection Error!");
         }
-            switch(op){
-                case 1: insert(item);
-                        break;
-                case 2: delete(item);
-                        break;
-                case 3: traversal();
-                        break;
-                case 4: exit(0);
-                default : printf("\nChose Correct Option!");
-            }
     }
     return 0;
 }
 
-struct node* createNode(int item){
-    struct node *new = (struct node*)malloc(sizeof(struct node));
-    new->data = item;
-    new->left = new->right = NULL;
-    return new;
+TreeNode* create_tree_node(int val) {
+    TreeNode *newNode = (TreeNode*)malloc(sizeof(TreeNode));
+    if (!newNode) return NULL;
+    newNode->data = val;
+    newNode->left = newNode->right = NULL;
+    return newNode;
 }
 
-void insert(int item){
-    if(ROOT == NULL){
-        ROOT = createNode(item);
-        return;
-    }
-    struct node *ptr = ROOT,*parent = NULL;
-    while(ptr!=NULL){
-        parent = ptr;
-        if(item < ptr->data){
-            ptr = ptr->left;
-        }else if(item > ptr->data){
-            ptr = ptr->right;
-        }else{
-            printf("\nItem already Exists ");
-            return;
-        }
-    }
-    struct node * new = createNode(item);
-
-    if(item<parent->data){
-        parent->left=new;
-    }else{
-        parent->right = new;
-    }
+TreeNode* insert_recursive(TreeNode* root, int val) {
+    if (root == NULL) return create_tree_node(val);
+    
+    if (val < root->data)
+        root->left = insert_recursive(root->left, val);
+    else if (val > root->data)
+        root->right = insert_recursive(root->right, val);
+    else
+        printf("\nDuplicate value %d ignored.", val);
+        
+    return root;
 }
 
-void delete(int item){
-    int flag=0, met;
-    struct node *ptr = ROOT, *parent = NULL;
-    while(ptr!=NULL){
-        if(item < ptr->data){
-            parent = ptr;
-            ptr=ptr->left;
-        }else if(item > ptr->data){
-            parent = ptr;
-            ptr=ptr->right;
-        }else{
-            flag = 1;
-            break;
-        }
-    }
-    if(flag == 0){
-        printf("Item not found");
-        return;
-    }
-    if(ptr->left == NULL && ptr->right == NULL) met = 1;
-    else if(ptr->left != NULL && ptr->right != NULL) met = 3;
-    else met = 2;
+TreeNode* find_min_node(TreeNode* node) {
+    TreeNode *current = node;
+    while (current && current->left != NULL)
+        current = current->left;
+    return current;
+}
 
-    if(met == 1){
-        if (parent == NULL) {
-            ROOT = NULL;
-        }else if(parent->left == ptr){
-            parent->left = NULL;
-        }else{
-            parent->right = NULL;
-        }
-        free(ptr);
-    }else if(met == 3){
-        struct node *suc = ptr->right,*sucPar = ptr;
-        while(suc->left!=NULL){
-            sucPar = suc;
-            suc = suc->left;
-        }
-        ptr -> data = suc->data;
+TreeNode* delete_recursive(TreeNode* root, int val) {
+    if (root == NULL) {
+        printf("\nValue %d not found.", val);
+        return root;
+    }
 
-        if(sucPar->left == suc){
-            sucPar->left = suc->right;
-        }else{
-            sucPar->right = suc->right;
+    if (val < root->data)
+        root->left = delete_recursive(root->left, val);
+    else if (val > root->data)
+        root->right = delete_recursive(root->right, val);
+    else {
+        /* Node with only one child or no child */
+        if (root->left == NULL) {
+            TreeNode *temp = root->right;
+            free(root);
+            return temp;
+        } else if (root->right == NULL) {
+            TreeNode *temp = root->left;
+            free(root);
+            return temp;
         }
-        free(suc);
-    }else{
-        struct node *child = (ptr->left!=NULL) ? ptr->left : ptr->right;
-        if (parent == NULL) {
-            ROOT = child;
-        }else if(parent->left == ptr){
-            parent->left = child;
-        }else{
-            parent->right = child;
-        }
-        free(ptr);
+
+        /* Node with two children: Get the inorder successor */
+        TreeNode *temp = find_min_node(root->right);
+        root->data = temp->data;
+        root->right = delete_recursive(root->right, temp->data);
+    }
+    return root;
+}
+
+void traverse_pre_order(TreeNode* root) {
+    if (root) {
+        printf("%d ", root->data);
+        traverse_pre_order(root->left);
+        traverse_pre_order(root->right);
     }
 }
 
-void traversal(){
+void traverse_in_order(TreeNode* root) {
+    if (root) {
+        traverse_in_order(root->left);
+        printf("%d ", root->data);
+        traverse_in_order(root->right);
+    }
+}
+
+void traverse_post_order(TreeNode* root) {
+    if (root) {
+        traverse_post_order(root->left);
+        traverse_post_order(root->right);
+        printf("%d ", root->data);
+    }
+}
+
+void handle_traversal_menu() {
     int mode;
-    printf("\n1.Preorder\n2.Inorder\n3.Postorder\nEnter The Mode : ");
-    scanf("%d",&mode);
-    switch (mode)
-    {
-    case 1: preOrder(ROOT);
-        break;
-    case 2: inOrder(ROOT);
-        break;
-    case 3: postOrder(ROOT);
-        break;
-    default:
-        break;
-    }
+    if (!root_node) { printf("\nTree is empty."); return; }
+    printf("\nOrder: 1.Pre  2.In  3.Post: ");
+    scanf("%d", &mode);
+    printf("Result: ");
+    if (mode == 1) traverse_pre_order(root_node);
+    else if (mode == 2) traverse_in_order(root_node);
+    else if (mode == 3) traverse_post_order(root_node);
+    printf("\n");
 }

@@ -1,235 +1,161 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<stdbool.h>
+/**
+ * @file doubly_linked_list.c
+ * @brief Professional implementation of a Doubly Linked List for CET MCA.
+ */
 
-struct node
-{
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct node {
     int data;
-    struct node *r_link, *l_link;
-};
+    struct node *prev;
+    struct node *next;
+} Node;
 
-struct node *head,*temp,*ptr;
-int option, item, position, i;
-bool itemFound;
+Node *head_node = NULL;
 
-void insertFirst();
-void insertEnd();
-void insertPosition();
-void deleteFirst();
-void deleteEnd();
-void deletePosition();
-void traversal();
-void search();
-void reverse_traversal();
+Node* create_node(int value) {
+    Node *newNode = (Node*)malloc(sizeof(Node));
+    if (!newNode) exit(1);
+    newNode->data = value;
+    newNode->prev = NULL;
+    newNode->next = NULL;
+    return newNode;
+}
+
+void insert_front();
+void insert_back();
+void insert_at_pos();
+void delete_front();
+void delete_back();
+void delete_at_pos();
+void display_forward();
+void display_backward();
 
 int main() {
-    head = (struct node*)malloc(sizeof(struct node));
-    head->r_link = NULL;
-    while(1){
-        printf("\n========== MENU ==========\n");
-        printf("1. Insert at Beginning\n");
-        printf("2. Insert at End\n");
-        printf("3. Insert at Specific Position\n");
-        printf("4. Delete from Beginning\n");
-        printf("5. Delete from End\n");
-        printf("6. Delete from Specific Position\n");
-        printf("7. Traverse List\n");
-        printf("8. Search in List\n");
-        printf("9. Exit\n");
-        printf("==========================\n");
-        printf("Enter your choice: ");
-        scanf("%d", &option);
-        switch (option) {
-            case 1:
-                insertFirst();
-                break;
-            case 2:
-                insertEnd();
-                break;
-            case 3:
-                insertPosition();
-                break;
-            case 4:
-                deleteFirst();
-                break;
-            case 5:
-                deleteEnd();
-                break;
-            case 6:
-                deletePosition();
-                break;
-            case 7:
-                traversal();
-                break;
-            case 8:
-                reverse_traversal();
-                break;
-            case 9:
-                search();
-                break;
-            case 10:
-                printf("Exiting the program.\n");
-                exit(0);
-            default:
-                printf("Invalid option! Please choose between 1 and 9.\n");
+    int choice;
+    head_node = create_node(0); /* Dummy head */
+
+    while (1) {
+        printf("\n--- Doubly Linked List (Refined) ---");
+        printf("\n1. Insert Front\n2. Insert Back\n3. Insert at Pos");
+        printf("\n4. Delete Front\n5. Delete Back\n6. Delete at Pos");
+        printf("\n7. Display Forward\n8. Display Backward\n9. Exit");
+        printf("\nChoice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1: insert_front(); break;
+            case 2: insert_back(); break;
+            case 3: insert_at_pos(); break;
+            case 4: delete_front(); break;
+            case 5: delete_back(); break;
+            case 6: delete_at_pos(); break;
+            case 7: display_forward(); break;
+            case 8: display_backward(); break;
+            case 9: exit(0);
+            default: printf("\nInvalid Choice!");
         }
     }
     return 0;
 }
 
-
-void insertFirst(){
-    ptr = (struct node*)malloc(sizeof(struct node));
-    if(ptr == NULL){
-        printf("\nOverflow");
-        return;
-    }
-    printf("\nEnter the Item to Enter : ");
-    scanf("%d",&item);
-    ptr->data = item;
-    ptr->r_link = head->r_link;
-    ptr->l_link = head;
-    head->r_link = ptr;
+void insert_front() {
+    int val;
+    printf("Enter value: ");
+    scanf("%d", &val);
+    Node *newNode = create_node(val);
+    
+    newNode->next = head_node->next;
+    newNode->prev = head_node;
+    if (head_node->next) head_node->next->prev = newNode;
+    head_node->next = newNode;
 }
 
-void insertEnd(){
-    ptr = (struct node*)malloc(sizeof(struct node));
-    if(ptr == NULL){
-        printf("\nOverflow");
-        return;
-    }
-    temp = head;
-    printf("\nEnter the Item to Enter : ");
-    scanf("%d",&item);
-    ptr->data = item;
-    while(temp->r_link != NULL){
-        temp = temp->r_link;
-    }
-    temp->r_link = ptr;
-    temp->l_link = ptr->l_link;
-    ptr->l_link= temp;
-    ptr->r_link = NULL;
-
-}
-void insertPosition(){
-    temp = head;
-    ptr = (struct node*)malloc(sizeof(struct node));
-    if(ptr == NULL){
-        printf("\nOverflow");
-        return;
-    }
-    printf("\nEnter the Item to Enter : ");
-    scanf("%d",&item);
-    ptr->data = item;
-    printf("\nEnter the Position to insert Node : ");
-    scanf("%d",&position);
-    for(i=1;i<position;i++){
-        temp = temp->r_link;
-    }
-    ptr->r_link = temp->r_link;
-    ptr->l_link = temp;
-    temp->r_link = ptr;
+void insert_back() {
+    int val;
+    printf("Enter value: ");
+    scanf("%d", &val);
+    Node *newNode = create_node(val);
+    Node *current = head_node;
+    while (current->next) current = current->next;
+    
+    current->next = newNode;
+    newNode->prev = current;
 }
 
-
-void deleteFirst(){
-    if(head->r_link == NULL){
-        printf("\nNo Node -- >  UnderFlow !!");
-        return;
+void insert_at_pos() {
+    int val, pos;
+    printf("Value: "); scanf("%d", &val);
+    printf("Position: "); scanf("%d", &pos);
+    
+    Node *current = head_node;
+    for (int i = 1; i < pos && current; i++) current = current->next;
+    
+    if (!current) {
+        printf("\nPosition invalid!");
+    } else {
+        Node *newNode = create_node(val);
+        newNode->next = current->next;
+        newNode->prev = current;
+        if (current->next) current->next->prev = newNode;
+        current->next = newNode;
     }
-    ptr = head->r_link;
-    head->r_link = ptr->r_link;
-    ptr->r_link->l_link = head;
-    free(ptr);
 }
 
-void deleteEnd(){
-    ptr = head;
-    if(ptr->r_link == NULL){
-        printf("\nNo Node for Delete!!");
-        return;
-    }
-    while(ptr->r_link->r_link!=NULL){
-        ptr = ptr->r_link;
-    } 
-    free(ptr->r_link);
-    ptr->r_link = NULL;
+void delete_front() {
+    if (!head_node->next) { printf("\nUnderflow!"); return; }
+    Node *toDelete = head_node->next;
+    head_node->next = toDelete->next;
+    if (toDelete->next) toDelete->next->prev = head_node;
+    free(toDelete);
 }
 
-void deletePosition(){
-    if(head->r_link == NULL){
-        printf("\nNo Node -- >  UnderFlow !!");
-        return;
-    }
-    ptr = head;
-    printf("\nEnter the Position to Delete Node.");
-    scanf("%d",&position);
-    for(i=1;i<position;i++){
-        ptr = ptr->r_link;
-    }
-    ptr->l_link->r_link = ptr->r_link;
-    ptr->r_link->l_link = ptr->l_link;
-    free(ptr);
+void delete_back() {
+    if (!head_node->next) { printf("\nUnderflow!"); return; }
+    Node *current = head_node->next;
+    while (current->next) current = current->next;
+    
+    current->prev->next = NULL;
+    free(current);
 }
 
-void traversal(){
-    temp = head->r_link;
-    if(temp == NULL){
-        printf("\nNo Node -- >  UnderFlow !!");
-        return;
+void delete_at_pos() {
+    int pos;
+    if (!head_node->next) return;
+    printf("Position: "); scanf("%d", &pos);
+    
+    Node *current = head_node->next;
+    for (int i = 1; i < pos && current; i++) current = current->next;
+    
+    if (!current) {
+        printf("\nInvalid Position!");
+    } else {
+        current->prev->next = current->next;
+        if (current->next) current->next->prev = current->prev;
+        free(current);
     }
-    printf("\n| NULL | HEAD | %p |", (void*)temp);
-    while(temp != NULL){
-        printf(" ---> | %p | ", (void*)temp->l_link);
-        printf(" %d | ", temp->data);
-        if(temp->r_link != NULL)
-            printf("%p | ", (void*)temp->r_link);
-        else
-            printf("NULL | ");
-        temp = temp->r_link;
-    }
-    printf("\n");
 }
 
-void reverse_traversal(){
-    if (head->r_link == NULL) {
-        printf("\nNo Node -- >  UnderFlow !!");
-        return;
+void display_forward() {
+    Node *current = head_node->next;
+    printf("\nForward: ");
+    while (current) {
+        printf("[%d] <-> ", current->data);
+        current = current->next;
     }
-    temp = head->r_link;
-    while (temp->r_link != NULL) {
-        temp = temp->r_link;
-    }
-    printf("\nReverse Traversal:\n");
-    while (temp != head) {
-        printf("| %d |", temp->data);
-        if (temp->l_link != head)
-            printf(" <--- ");
-        temp = temp->l_link;
-    }
-    printf(" <--- | HEAD |\n");
+    printf("NULL\n");
 }
 
-
-void search(){
-    temp = head->r_link;
-    if(head->r_link == NULL){
-        printf("\nNo Node -- >  UnderFlow !!");
-        return;
-    };
-    itemFound = false;
-    printf("\nEnter the Item to Search : ");
-    scanf("%d",&item);
-    i = 1;
-    while(temp != NULL){
-        if(item == temp->data){
-            printf("\nItem Found At Node - | Address | Position | Left Link | Data | Right Link | --->  | %p | %d | %p | %d | %p |",temp,i,temp->l_link, temp->data, temp->r_link);
-            itemFound = true;
-        }
-        i++;
-        temp = temp->r_link;
+void display_backward() {
+    Node *current = head_node->next;
+    if (!current) return;
+    while (current->next) current = current->next;
+    
+    printf("\nBackward: ");
+    while (current != head_node) {
+        printf("[%d] <-> ", current->data);
+        current = current->prev;
     }
-    if(!itemFound){
-        printf("\nItem Not in List");
-    }
+    printf("NULL\n");
 }

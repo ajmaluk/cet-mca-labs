@@ -1,21 +1,23 @@
-class Constructor{
+class constructor{
     int a,b;
-    Constructor(int a,int b){
+    constructor(){
+        a = 0;
+        b = 0;
+    }    
+    constructor(int a,int b){
         this.a = a;
         this.b = b;
     }
-    Constructor(int a){
-        this.a = a;
-        this.b = 20;
+    void display(){
+        System.out.println("A = "+a);
+        System.out.println("B = "+b);
     }
-    void Display(){
-        System.out.println("Values are : " + a + "and" + b);
-    }
-
+}
+class Main{
     public static void main(String[] args){
-        Constructor c1 = new Constructor(10);
-        Constructor c2 = new Constructor(20,40);
-        c1.Display();
-        c2.Display();
+        constructor ob = new constructor();
+        constructor ob1 = new constructor(10, 20);
+        ob.display();
+        ob1.display();
     }
 }

@@ -1,16 +1,17 @@
-print("<=== Number of digits in a number ===>")
+"""
+Aim: Write a Python program to find the number of digits in an integer.
+Course: Python Programming Lab (CET MCA)
+"""
 
-number = int(input("Enter the number: "))
+def count_digits(number):
+    """Counts digits by converting to string or using mathematical approach."""
+    # handles absolute value to ignore sign
+    return len(str(abs(number)))
 
-digits = 0
-
-temp = abs(number)
-
-if temp == 0:
-    digits = 1
-else:
-    while temp > 0:
-        temp = temp // 10
-        digits += 1
-
-print(f"Number of digits in {number} is {digits}")
+if __name__ == "__main__":
+    print("--- Digit Counter ---")
+    try:
+        num = int(input("Enter an integer: "))
+        print(f"Number of digits in {num} is: {count_digits(num)}")
+    except ValueError:
+        print("Please enter a valid integer.")

@@ -1,30 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=], initial-scale=1.0">
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Random Background Generator - CET MCA Lab</title>
+    <meta name="description" content="Simple JavaScript background color generator experiment for CET MCA Web Lab.">
+    <meta name="keywords" content="CET MCA, Web Lab, Event Handling, JavaScript Color, MCA Lab">
+    <link rel="stylesheet" href="styles/main.css">
     <style>
         body {
             display: flex;
-            align-items: center; 
+            align-items: center;
             justify-content: center;
-            height: 100vh;
-            margin: 0;
+            transition: background 0.5s ease;
+        }
+
+        .color-card {
+            text-align: center;
+            background: white;
+            padding: 3rem;
+            border-radius: var(--border-radius);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .hex-code {
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 2rem;
+            font-weight: bold;
+            margin: 1.5rem 0;
+            color: var(--primary-color);
         }
     </style>
 </head>
-<body>
-    <button id="Button" class="Button">Click Me</button>
+
+<body class="fade-in">
+    <div class="color-card">
+        <h1 style="margin-bottom: 0.5rem;">Color Picker</h1>
+        <p style="color: var(--text-muted);">Click the button to change the background</p>
+        <div id="hex-display" class="hex-code">#F8FAFC</div>
+        <button id="Button" class="btn" style="border: none; cursor: pointer; padding: 1rem 2.5rem;">Generate New
+            Color</button>
+    </div>
+
     <script>
-        let btn = document.getElementById("Button");
-        btn.addEventListener("click", function() {
-            let Bcolor = '#';
-            for (let i = 0; i < 6; i++) {
-                Bcolor += Math.floor(Math.random() * 10);
-            }
-            document.body.style.background = Bcolor
+        const btn = document.getElementById("Button");
+        const hexDisplay = document.getElementById("hex-display");
+
+        btn.addEventListener("click", function () {
+            // Generate a random hex color
+            const randomColor = '#' + Math.floor(Math.random() * 16777215).toString(16).padStart(6, '0').toUpperCase();
+
+            document.body.style.background = randomColor;
+            hexDisplay.textContent = randomColor;
+            hexDisplay.style.color = randomColor;
+
+            // Adjust text color of card based on brightness if needed, 
+            // but here we keep the card white for contrast.
         });
     </script>
 </body>
+
 </html>

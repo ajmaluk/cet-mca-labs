@@ -1,123 +1,203 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <link rel="stylesheet" href="./static/css/program6.css">
-        <title>CSS TUTORIAL</title>
-            <style>
-                body {
-                    background-color: azure;
-                    height: 100vh;
-                    margin: 0;
-                    display: flex;
-                    justify-content: center; 
-                }
 
-                *{
-                    font-family:Arial, Helvetica, sans-serif;
-                }
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Types Tutorial - CET MCA Lab</title>
+    <meta name="description" content="Interactive tutorial on Inline, Internal, and External CSS for CET MCA students.">
+    <meta name="keywords" content="CET MCA, Web Lab, CSS Tutorial, Inline CSS, External CSS, MCA Lab">
+    <link rel="stylesheet" href="styles/main.css">
+    <style>
+        .tutorial-grid {
+            display: grid;
+            grid-template-columns: 250px 1fr;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
 
-                .container {
-                    width: 90%;
-                }
-            </style>
-    </head>
-    <body>
-        <div class="container">
-            <h1 id="heading">CSS Tutorial</h1>
-            <table border="2" cellspacing="1" cellpadding="10px" width="90%">
-                <tr>
-                    <th id="p1">Inline</th>
-                    <td rowspan="3">
-                        <div class="content p1" id="target1">
-                            <strong>Inline CSS:</strong><br>
-                            Inline CSS refers to the method of applying styles directly to a specific HTML element using the <code>style</code> attribute within the element's opening tag. 
-                            <br><br>
-                            <strong>Key Characteristics:</strong>
-                            <ul>
-                                <li><strong>Direct Application:</strong> Styles are applied directly to the HTML element.</li>
-                                <li><strong>High Specificity:</strong> Inline styles override other styles.</li>
-                                <li><strong>Limited Reusability:</strong> Inline styles cannot be reused on other elements.</li>
-                            </ul>
-                            <strong>Syntax:</strong>
-                            <code>&lt;div style="color: red;"&gt;Content&lt;/div&gt;</code>
-                        </div>
+        .sidebar-tabs {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
 
-                        <div class="content p2" id="target2">
-                            <strong style="text-align:center;">Internal CSS:</strong><br>
-                            Internal CSS is defined in the <code>&lt;style&gt;</code> element inside the <code>&lt;head&gt;</code> section of an HTML document. It allows you to style a single page without affecting others.
-                            <br><br>
-                            <strong>Key Characteristics:</strong>
-                            <ul>
-                                <li><strong>Scoped to the Page:</strong> Styles apply only to elements within that page.</li>
-                                <li><strong>Organized:</strong> All styles are within a single document.</li>
-                                <li><strong>Can be easily modified:</strong> Unlike inline CSS, changes can be made in one place.</li>
-                            </ul>
-                            <strong>Syntax:</strong>
-                            <code>&lt;style&gt; p { color: blue; } &lt;/style&gt;</code>
-                        </div>
+        .tab-btn {
+            padding: 1rem;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: var(--border-radius);
+            cursor: pointer;
+            text-align: left;
+            font-weight: 600;
+            transition: all 0.2s;
+            color: var(--text-color);
+        }
 
-                        <div class="content p3" id="target3">
-                            <strong>External CSS:</strong><br>
-                            External CSS is defined in a separate CSS file, which is linked to an HTML document. This is the most efficient method for styling websites that have multiple pages.
-                            <br><br>
-                            <strong>Key Characteristics:</strong>
-                            <ul>
-                                <li><strong>Separation of Concerns:</strong> HTML and CSS are kept separate, improving maintainability.</li>
-                                <li><strong>Reusable:</strong> A single CSS file can be used across multiple pages.</li>
-                                <li><strong>Faster Load Times:</strong> Once downloaded, the CSS file is cached for faster page loads on subsequent visits.</li>
-                            </ul>
-                            <strong>How to implement:</strong>
-                            <br><br>
-                            1. Create a CSS file with a .css extension (e.g., <code>styles.css</code>)<br>
-                            2. Link it to your HTML with the <code>&lt;link&gt;</code> tag:
-                            <code>&lt;link rel="stylesheet" href="styles.css"&gt;</code>
-                        </div>
-                    </td>
-                </tr>
-                <tr>
-                    <th id="p2">Internal</th>
-                </tr>
-                <tr>
-                    <th id="p3">External</th>
-                </tr>
-            </table>
+        .tab-btn:hover {
+            background: #f1f5f9;
+            border-color: var(--primary-color);
+        }
+
+        .tab-btn.active {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .content-area {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            border: 1px solid var(--glass-border);
+            position: relative;
+            min-height: 400px;
+        }
+
+        .tutorial-content {
+            display: none;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .tutorial-content.active {
+            display: block;
+        }
+
+        pre {
+            background: #1e293b;
+            color: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+
+        code {
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        .feature-list {
+            margin-top: 1.5rem;
+        }
+
+        .feature-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .badge-inline {
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .badge-internal {
+            background: #fef9c3;
+            color: #854d0e;
+        }
+
+        .badge-external {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+    </style>
+</head>
+
+<body class="fade-in">
+    <div class="container">
+        <h1 class="main-title">CSS Integration Methods</h1>
+
+        <div class="tutorial-grid">
+            <div class="sidebar-tabs">
+                <button class="tab-btn active" onclick="showTab(0, this)">1. Inline CSS</button>
+                <button class="tab-btn" onclick="showTab(1, this)">2. Internal CSS</button>
+                <button class="tab-btn" onclick="showTab(2, this)">3. External CSS</button>
+            </div>
+
+            <div class="content-area">
+                <!-- Inline CSS -->
+                <div id="tab-0" class="tutorial-content active">
+                    <span class="feature-badge badge-inline">High Specificity</span>
+                    <h2>Inline CSS</h2>
+                    <p>Inline CSS is applied directly to specific HTML elements using the <code>style</code> attribute.
+                    </p>
+                    <div class="section" style="background: #f8fafc; border-left: 4px solid #22c55e;">
+                        <strong>Key Characteristics:</strong>
+                        <ul>
+                            <li>Applied directly within the HTML tag.</li>
+                            <li>Overrides styles from internal and external sheets.</li>
+                            <li>Not recommended for large projects due to poor reusability.</li>
+                        </ul>
+                    </div>
+                    <strong>Syntax Example:</strong>
+                    <pre><code>&lt;h1 style="color: blue; font-size: 20px;"&gt;Hello World&lt;/h1&gt;</code></pre>
+                </div>
+
+                <!-- Internal CSS -->
+                <div id="tab-1" class="tutorial-content">
+                    <span class="feature-badge badge-internal">Page Scoped</span>
+                    <h2>Internal CSS</h2>
+                    <p>Internal CSS is defined within a <code>&lt;style&gt;</code> block in the
+                        <code>&lt;head&gt;</code> section of an HTML document.
+                    </p>
+                    <div class="section" style="background: #fffbeb; border-left: 4px solid #eab308;">
+                        <strong>Key Characteristics:</strong>
+                        <ul>
+                            <li>Affects all elements of a specific type on a single page.</li>
+                            <li>Useful for unique styles on standalone pages.</li>
+                            <li>Increases the size of the HTML file.</li>
+                        </ul>
+                    </div>
+                    <strong>Syntax Example:</strong>
+                    <pre><code>&lt;style&gt;
+    body { background-color: #f0f0f0; }
+    p { color: #333; line-height: 1.5; }
+&lt;/style&gt;</code></pre>
+                </div>
+
+                <!-- External CSS -->
+                <div id="tab-2" class="tutorial-content">
+                    <span class="feature-badge badge-external">Best Practice</span>
+                    <h2>External CSS</h2>
+                    <p>External CSS is stored in a separate <code>.css</code> file and linked to the HTML document using
+                        a <code>&lt;link&gt;</code> tag.</p>
+                    <div class="section" style="background: #eff6ff; border-left: 4px solid #3b82f6;">
+                        <strong>Key Characteristics:</strong>
+                        <ul>
+                            <li>Maintain a single style file for multiple pages.</li>
+                            <li>Faster performance due to browser caching.</li>
+                            <li>Separates structure (HTML) from presentation (CSS).</li>
+                        </ul>
+                    </div>
+                    <strong>Syntax Example:</strong>
+                    <pre><code>&lt;!-- In HTML Head --&gt;
+&lt;link rel="stylesheet" href="styles.css"&gt;
+
+/* In styles.css */
+.title {
+    font-weight: bold;
+    color: var(--primary-color);
+}</code></pre>
+                </div>
+            </div>
         </div>
-            
-        <script>
-            function clear(){
-                document.getElementById("target1").style.display = "none";
-                document.getElementById("target2").style.display = "none";
-                document.getElementById("target3").style.display = "none";
+    </div>
 
-                document.getElementById("p1").style.backgroundColor = "azure";
-                document.getElementById("p2").style.backgroundColor = "azure";
-                document.getElementById("p3").style.backgroundColor = "azure";
-            }
+    <script>
+        function showTab(index, btn) {
+            // Hide all tabs
+            document.querySelectorAll('.tutorial-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
 
-            window.addEventListener('DOMContentLoaded', () => {
-                document.getElementById("target1").style.display = "block";
-                document.getElementById("p1").style.backgroundColor = "bisque";
+            // Show selected tab
+            document.getElementById(`tab-${index}`).classList.add('active');
+            btn.classList.add('active');
+        }
+    </script>
+</body>
 
-                document.getElementById("p1").addEventListener("click", function () {
-                    clear();
-                    document.getElementById("p1").style.backgroundColor = "bisque";
-                    document.getElementById("target1").style.display = "block";
-                });
-
-                document.getElementById("p2").addEventListener("click", function () {
-                    clear();
-                    document.getElementById("p2").style.backgroundColor = "bisque";
-                    document.getElementById("target2").style.display = "block";
-                });
-
-                document.getElementById("p3").addEventListener("click", function () {
-                    clear();
-                    document.getElementById("p3").style.backgroundColor = "bisque";
-                    document.getElementById("target3").style.display = "block";
-                });
-            });
-        </script>
-    </body>
 </html>

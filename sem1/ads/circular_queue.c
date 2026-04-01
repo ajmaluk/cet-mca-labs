@@ -1,127 +1,122 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<stdbool.h>
+/**
+ * @file circular_queue.c
+ * @brief Circular Queue implementation to prevent memory wastage in array-based queues.
+ */
 
-#define Max 100
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
 
+#define CQ_MAX 100
 
-int frond, rear , maxSize , i , item , option;
-int queue[Max];
+/* State */
+int cq_data[CQ_MAX];
+int head = -1; /* Same as front */
+int tail = -1; /* Same as rear */
+int q_size = CQ_MAX;
 
-void enQueue();
-void decQueue();
-void traversal();
-void search();
+/* Operations */
+void enqueue_circular();
+void dequeue_circular();
+void display_circular_status();
+void search_circular_element();
 
-int main(){
-    frond = rear = -1;
-    printf("\nEnter the Maximum Size of Queue : ");
-    scanf("%d",&maxSize);
-    while(1){
-        printf("\n\n1.Enqueue\n2.DeQueue\n3.Traversal\n4.Search\n5.Exit\n\nEnter the Option : ");
-        scanf("%d",&option);
-        switch (option)
-        {
-            case 1 : enQueue(); break;
-            case 2 : decQueue(); break;
-            case 3 : traversal(); break;
-            case 4 : search(); break;
-            case 5 : exit(0);
-            default:
-                break;
+int main() {
+    int choice;
+    printf("Configuration: Set Circular Queue size: ");
+    scanf("%d", &q_size);
+    if (q_size > CQ_MAX) q_size = CQ_MAX;
+
+    while (1) {
+        printf("\n--- Circular Queue Manager ---");
+        printf("\n1. Enqueue\n2. Dequeue\n3. Display\n4. Search\n5. Exit");
+        printf("\nPrompt: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1: enqueue_circular(); break;
+            case 2: dequeue_circular(); break;
+            case 3: display_circular_status(); break;
+            case 4: search_circular_element(); break;
+            case 5: exit(0);
+            default: printf("\nInput Error: Choice not recognized.");
         }
     }
     return 0;
 }
 
-void enQueue() {
-    if ((frond == (rear + 1) % maxSize)) {
-        printf("\nOverflow - Queue is full!\n");
+void enqueue_circular() {
+    int val;
+    /* Check if full: (tail + 1) % size == head */
+    if ((tail + 1) % q_size == head) {
+        printf("\nOverflow: Circular buffer is saturated.");
         return;
     }
 
-    printf("\nEnter the Item to insert into queue: ");
-    scanf("%d", &item);
+    printf("Value to add: ");
+    scanf("%d", &val);
 
-    if (frond == -1) {
-        frond = rear = 0;
+    if (head == -1) {
+        head = tail = 0;
     } else {
-        rear = (rear + 1) % maxSize;
+        tail = (tail + 1) % q_size;
     }
 
-    queue[rear] = item;
-    printf("\nItem inserted successfully!\n");
+    cq_data[tail] = val;
+    printf("Added %d to position %d.", val, tail);
 }
 
-void decQueue() {
-    if (frond == -1) {
-        printf("\nUnderflow - Queue is empty!\n");
+void dequeue_circular() {
+    if (head == -1) {
+        printf("\nUnderflow: Circular buffer is empty.");
         return;
     }
 
-    printf("\nItem '%d' removed successfully!", queue[frond]);
+    printf("\nPopped %d from position %d.", cq_data[head], head);
 
-    if (frond == rear) {
-        frond = rear = -1;
+    if (head == tail) {
+        /* Reset when queue becomes empty */
+        head = tail = -1;
     } else {
-        frond = (frond + 1) % maxSize;
-    }
-}
-
-void traversal() {
-    if (frond == -1) {
-        printf("\nQueue is empty!\n");
-        return;
-    }
-
-    printf("\n");
-    if (frond > rear) {
-        for (i = frond; i <= maxSize - 1; i++) {
-            printf("| %d ", queue[i]);
-        }
-        for (i = 0; i <= rear; i++) {
-            printf("| %d ", queue[i]);
-        }
-    } else {
-        for (i = frond; i <= rear; i++) {
-            printf("| %d ", queue[i]);
-        }
+        head = (head + 1) % q_size;
     }
 }
 
-void search(){
-    if (frond == -1) {
-        printf("\nQueue is empty!\n");
+void display_circular_status() {
+    if (head == -1) {
+        printf("\nStatus: Buffer empty.");
         return;
     }
-    printf("\nEnter the Item to Search : ");
-    scanf("%d", &item);
-    bool itemFound = false;
 
-    if(frond>rear){
-        for(i = frond ; i <= maxSize-1; i++){
-            if(queue[i] == item){
-                printf("\nItem ' %d ' Found on ' %d ' ",item, i);
-                itemFound = true;
-            }
-        }
-        for(i = 0 ; i <=rear; i++){
-            if(queue[i] == item){
-                printf("\nItem ' %d ' Found on ' %d ' ",item, i);
-                itemFound = true;
-            }
-        }
+    printf("\nCycle Content: ");
+    int i = head;
+    while (true) {
+        printf("[%d] ", cq_data[i]);
+        if (i == tail) break;
+        i = (i + 1) % q_size;
     }
-    else{
-        for(i = frond ; i <= rear; i++){
-            if(queue[i] == item){
-                printf("\nItem ' %d ' Found on ' %d ' ",item, i);
-                itemFound = true;
-            }
+    printf("\n(Head: %d, Tail: %d)\n", head, tail);
+}
+
+void search_circular_element() {
+    if (head == -1) {
+        printf("\nSearch failed: Buffer empty.");
+        return;
+    }
+    
+    int target, i = head;
+    bool found = false;
+    printf("Target search value: ");
+    scanf("%d", &target);
+
+    while (true) {
+        if (cq_data[i] == target) {
+            printf("\nFound %d at physical index %d", target, i);
+            found = true;
         }
+        if (i == tail) break;
+        i = (i + 1) % q_size;
     }
 
-    if(!itemFound){
-        printf("Item Not Found in Queue");
-    }
+    if (!found) printf("\nValue %d not found in circular cycle.", target);
 }

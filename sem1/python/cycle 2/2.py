@@ -1,23 +1,27 @@
-print("<=== Fibonacci Series of N Terms ===>")
+"""
+Aim: Write a Python program to generate Fibonacci series of N terms.
+Course: Python Programming Lab (CET MCA)
+"""
 
-def fib(n):
+def generate_fibonacci(n):
+    """Generates and prints the Fibonacci series up to n terms."""
     if n <= 0:
-        print("Nothing")
+        print("Please enter a positive integer.")
         return
-    elif n == 1:
-        print("0")
-        return
-    elif n == 2:
-        print("0, 1")
-        return
-
+    
+    series = []
     a, b = 0, 1
-    print(a, b, end=', ')
-    for i in range(n - 2):
-        c = a + b
-        print(c, end=', ' if i < n - 3 else '')
-        a, b = b, c
-    print() 
+    for _ in range(n):
+        series.append(str(a))
+        a, b = b, a + b
+    
+    print(f"Fibonacci series ({n} terms):")
+    print(", ".join(series))
 
-num = int(input("Enter the Range: "))
-fib(num)
+if __name__ == "__main__":
+    print("--- Fibonacci Series Generator ---")
+    try:
+        count = int(input("Enter the number of terms: "))
+        generate_fibonacci(count)
+    except ValueError:
+        print("Invalid input! Please enter an integer.")

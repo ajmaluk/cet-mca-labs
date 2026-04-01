@@ -1,35 +1,53 @@
-print("<=== Publisher, Book, Python (base class constructor invocation, Method Overriding) ===>\n")
+"""
+Aim: Create a hierarchy of classes: Publisher -> Book -> Python. 
+     Demonstrate constructor invocation and method overriding.
+Course: Python Programming Lab (CET MCA)
+"""
 
 class Publisher:
-    def __init__(self, name, age):
+    """Base class for publishers."""
+    def __init__(self, name):
         self.name = name
-        self.age = age
+
+    def display(self):
+        print(f"Publisher Name: {self.name}")
 
 class Book(Publisher):
-    def __init__(self, no_of_books, name, age, book_name):
-        super().__init__(name, age)
-        self.no_of_books = no_of_books
-        self.book_name = book_name
-    
-    def display_books(self):
-        print(f"Number of Books by {self.name} is {self.no_of_books}")
+    """Derived class for general books."""
+    def __init__(self, name, title, author):
+        super().__init__(name)
+        self.title = title
+        self.author = author
 
-    def author_name(self):
-        print(f"From Book Class:\nThe author name is {self.name}")
+    def display(self):
+        super().display()
+        print(f"Book Title    : {self.title}")
+        print(f"Author        : {self.author}")
 
 class Python(Book):
-    def __init__(self, no_of_books, name, age, book_name):
-        super().__init__(no_of_books, name, age, book_name)
+    """Multi-level derived class for Python books."""
+    def __init__(self, name, title, author, price, pages):
+        super().__init__(name, title, author)
+        self.price = price
+        self.pages = pages
 
-    def author_name(self):
-        print(f"From Python Class:\nThe author name is {self.name}")
+    def display(self):
+        """Overrides display to show all details."""
+        print("\n--- Book Details ---")
+        super().display()
+        print(f"Price         : ₹{self.price}")
+        print(f"Pages         : {self.pages}")
+        print("--------------------")
 
-    def print_book_name(self):
-        print(f"Book Name is {self.book_name}")
-
-p = Python(5, "John Doe", 45, "Learning Python")
-p.display_books()
-p.author_name()
-p.print_book_name()
-
-print(p.name)
+if __name__ == "__main__":
+    print("--- Library Management Hierarchy ---")
+    
+    my_book = Python(
+        name="O'Reilly",
+        title="Fluent Python",
+        author="Luciano Ramalho",
+        price=3500,
+        pages=700
+    )
+    
+    my_book.display()

@@ -1,72 +1,56 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Personal Details - Program 2</title>
+    <link rel="stylesheet" href="../styles/main.css">
     <style>
+        body {
+            padding: 1rem;
+            background: transparent;
+        }
+
         .container {
+            max-width: 600px;
+            padding: 1.5rem;
+        }
+
+        .detail-row {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            width: 100%;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
         }
 
-        table {
-            border-collapse: collapse;
-            width: 80%;
-        }
-
-        th{
-            background-color: aqua;
-        }
-
-        th,td {
-            padding: 10px;
-            text-align: center;
-        }
-
-        td:nth-child(odd){
-            background-color: azure;
-        }
-
-        td:nth-child(even){
-            background-color: antiquewhite;
-        }
-        .next{
-            margin-top: 30px;
-        }
-        .next a{
-            padding: 10px;
-            text-decoration: none;
-            background-color: aqua;
-            border-radius: 10px;
-            color: black;
+        .label {
+            font-weight: 600;
+            color: var(--primary-color);
         }
     </style>
-</head> 
-<body>
+</head>
+
+<body class="fade-in">
     <div class="container">
-        <table border="1">
-            <tr>
-                <th colspan="2">Personal Details</th>
-            </tr>
-            <tr>
-                <td>Name</td>
-                <td>MUHAMMED AJMAL U K</td>
-            </tr>
-            <tr>
-                <td>Age</td>
-                <td>21</td>
-            </tr>
-            <tr>
-                <td>Address</td>
-                <td>Kannur</td>
-            </tr>
-        </table>
-        <div class="next">
-            <a href="./education_qualification.html">Next</a>
+        <h2 style="text-align: center;">Personal Information</h2>
+        <div class="detail-row">
+            <span class="label">Name:</span>
+            <span>John Doe</span>
+        </div>
+        <div class="detail-row">
+            <span class="label">Course:</span>
+            <span>MCA - Computer Applications</span>
+        </div>
+        <div class="detail-row">
+            <span class="label">College:</span>
+            <span>College of Engineering Trivandrum</span>
+        </div>
+        <div class="detail-row">
+            <span class="label">Email:</span>
+            <span>johndoe@example.com</span>
         </div>
     </div>
 </body>
+
 </html>

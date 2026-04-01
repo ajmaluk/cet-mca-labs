@@ -1,106 +1,62 @@
 <?php
     $conn = mysqli_connect('localhost', 'root', '', 'ajmal');
     if (!$conn) {
-        die("Connection Failed: " . mysqli_connect_error());
+        die("Database connection failed");
     }
 ?>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Bills - EB System</title>
+    <link rel="stylesheet" href="../../styles/main.css">
+    <style>
+        body { padding: 2rem; background: transparent; }
+        .search-card { max-width: 600px; margin: 0 auto; background: white; padding: 2rem; border-radius: var(--border-radius); box-shadow: var(--shadow); }
+        .search-box { display: grid; grid-template-columns: 1fr 1fr auto; gap: 10px; margin-top: 1rem; }
+        input, select { padding: 0.6rem; border: 1px solid #cbd5e1; border-radius: 8px; }
+        .result-area { margin-top: 2rem; padding: 1.5rem; border-radius: 8px; background: #f8fafc; display: none; }
+        .data-row { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #e2e8f0; }
+        .data-label { font-weight: 600; color: var(--primary-dark); }
+    </style>
+</head>
+<body class="fade-in">
+    <div class="search-card">
+        <h2>Quick Search</h2>
+        <form method="post" class="search-box">
+            <input type="number" name="consumer_id" placeholder="ID (e.g. 101)" required>
+            <select name="month" required>
+                <?php
+                    $months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+                    foreach($months as $m) echo "<option value='$m'>$m</option>";
+                ?>
+            </select>
+            <button type="submit" class="btn" style="border: none; cursor: pointer; padding: 0.6rem 1.5rem;">Find</button>
+        </form>
 
-<style>
-    .container{
-        width:100%;
-        height:100vh;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        background:lightblue;
-        flex-direction:column;
-    }
-
-    .container form{
-        width:40%;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        flex-direction:column;
-    }
-
-    .container form input[type="number"],.container form select{
-        width:200px;
-        padding:10px;
-        border-radius:10px;
-        border:none;
-        margin-bottom:20px;
-    }   
-
-    .container form input[type="submit"]{
-        width: 200px;
-        padding:10px;
-        color:white;
-        background: blue;
-        border:none;
-        border-radius:20px;
-    }
-
-    .container .result{
-        width:40%;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        flex-direction:column;
-    }
-
-    .result h3{
-        font-family: Arial, Helvetica, sans-serif;
-    }
-
-    .result .not-found{
-        color:red;
-    }
-</style>
-
-<div class="container">
-    <form method="post">
-        <input type="number" name="consumer_id" placeholder="Consumer Number">
-        <select name="month">
-            <?php
-                $month_drop = ['jan','feb','mar','april','may','jun','jul','aug','sept','oct','nov','dec'];
-                for($i = 0;$i<count($month_drop);$i++){
-                    $mon = $month_drop[$i];
-                    echo "<option value='${mon}'>${mon}</option>";
-                }
-            ?>
-        </select>
-        <input type="submit" value="Search">
-    </form>
-    <div class="result">
         <?php
-            if ($_SERVER['REQUEST_METHOD'] == "POST") {
+        if ($_SERVER['REQUEST_METHOD'] == "POST") {
+            $cid = mysqli_real_escape_string($conn, $_POST['consumer_id']);
+            $mon = mysqli_real_escape_string($conn, $_POST['month']);
 
-                $cons_id = $_POST['consumer_id'];
-                $month   = $_POST['month'];
+            $query = "SELECT b.*, c.consumer_name FROM bill b JOIN consumer c ON b.consumer_id = c.consumer_id WHERE b.consumer_id='$cid' AND b.month='$mon'";
+            $res = mysqli_query($conn, $query);
 
-                $bill_query = "SELECT * FROM bill WHERE consumer_id='$cons_id' AND month='$month'";
-                $bill = mysqli_query($conn, $bill_query);
-
-                if (mysqli_num_rows($bill) == 1) {
-                    $row = mysqli_fetch_assoc($bill);
-                    $amount = $row['amount'];
-                    $unit = $row['unit'];
-
-                    $user_query= "SELECT * FROM consumer where consumer_id='$cons_id'";
-                    $result_con = mysqli_query($conn,$user_query);
-                    if($result_con && mysqli_num_rows($result_con)>0){
-                        $data = mysqli_fetch_assoc($result_con);
-                        $con_name = $data['consumer_name'];
-                        echo "<h3>Consumer Name : $con_name</h3>";
-                        echo "<h3>Consumer ID : $cons_id</h3>";
-                    }
-                    echo "<h3>Amount : $amount</h3>";
-                    echo "<h3>Unit : $unit</h3>";           
-                } else {
-                    echo "<h3 class='not-found'>No data found</h3>";
-                }
+            if ($res && mysqli_num_rows($res) > 0) {
+                $data = mysqli_fetch_assoc($res);
+                echo "<div class='result-area' style='display: block;'>";
+                echo "<h3>Record Found</h3>";
+                echo "<div class='data-row'><span class='data-label'>Name:</span><span>".$data['consumer_name']."</span></div>";
+                echo "<div class='data-row'><span class='data-label'>ID:</span><span>$cid</span></div>";
+                echo "<div class='data-row'><span class='data-label'>Amount:</span><span>₹".$data['amount']."</span></div>";
+                echo "<div class='data-row'><span class='data-label'>Units:</span><span>".$data['unit']." units</span></div>";
+                echo "</div>";
+            } else {
+                echo "<p style='color: #ef4444; margin-top: 1.5rem; font-weight: 600; text-align: center;'>No billing record found for this period.</p>";
             }
+        }
         ?>
     </div>
-</div>
+</body>
+</html>

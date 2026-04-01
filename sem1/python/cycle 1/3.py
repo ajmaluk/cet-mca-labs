@@ -1,22 +1,26 @@
-print("<=== Largest Among Three Numbers ===>")
+"""
+Aim: Write a Python program to find the largest among three numbers.
+Course: Python Programming Lab (CET MCA)
+"""
 
-a = int(input("Enter the First Number : "))
-b = int(input("Enter the Second Number : "))
-c = int(input("Enter the Third Number : "))
-
-print("<=== Using Manual Method ===>\n\n")
-if a>b:
-    if a>c:
-        print(a,end='')
+def find_largest(a, b, c):
+    """Returns the largest among three values using nested conditionals."""
+    if a >= b and a >= c:
+        return a
+    elif b >= c:
+        return b
     else:
-        print(c,end='')
-else:
-    if b>c:
-        print(b,end='')
-    else:
-        print(c,end='')
-print(" is Greater Number\n\n")
+        return c
 
-
-print("Using Math - Automatic\n")
-print(max(a, b, c), " is Greater Number\n\n")
+if __name__ == "__main__":
+    print("--- Maximum Finding Utility ---")
+    try:
+        n1 = float(input("Enter first number: "))
+        n2 = float(input("Enter second number: "))
+        n3 = float(input("Enter third number: "))
+        
+        largest = find_largest(n1, n2, n3)
+        print(f"\nThe largest number is: {largest}")
+        
+    except ValueError:
+        print("Invalid input format.")

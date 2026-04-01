@@ -1,90 +1,80 @@
-<style>
-    .container{
-        width:100%;
-        height:100vh;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        background:lightblue;
-    }
-
-    .container form{
-        width:40%;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        flex-direction:column;
-    }
-
-    .container form input[type="text"],
-    .container form input[type="number"],
-    .container form select{
-        width:200px;
-        padding:10px;
-        border-radius:10px;
-        border:none;
-        margin-bottom:20px;
-    }
-
-    .container form input[type="submit"]{
-        width: 200px;
-        padding:10px;
-        color:white;
-        background: blue;
-        border:none;
-        border-radius:20px;
-    }
-</style>
-
-
 <?php
-    $conn=mysqli_connect('localhost','root','','ajmal');
-    if(!$conn){
-        die("Failed");
+    $conn = mysqli_connect('localhost', 'root', '', 'ajmal');
+    if (!$conn) {
+        die("Connection Failed");
     }
 ?>
-<div class="container">
-    <form method="post">
-        <select name="consumer_id" required>
-            <option value="" disabled selected>Select Consumer</option>
-            <?php 
-                $query = "SELECT * FROM consumer";
-                $result = mysqli_query($conn, $query);
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Entry - EB System</title>
+    <link rel="stylesheet" href="../../styles/main.css">
+    <style>
+        body { padding: 2rem; background: transparent; }
+        .form-card { max-width: 500px; margin: 0 auto; background: white; padding: 2.5rem; border-radius: var(--border-radius); box-shadow: var(--shadow); }
+        .form-group { margin-bottom: 1.25rem; }
+        label { display: block; margin-bottom: 0.5rem; font-weight: 600; }
+        select, input[type="number"] { width: 100%; padding: 0.75rem; border: 1px solid #cbd5e1; border-radius: 8px; }
+    </style>
+</head>
+<body class="fade-in">
+    <div class="form-card">
+        <h2 style="text-align: center; margin-bottom: 1.5rem;">Add New Bill</h2>
+        
+        <form method="post">
+            <div class="form-group">
+                <label>Select Consumer</label>
+                <select name="consumer_id" required>
+                    <option value="" disabled selected>Choose a consumer...</option>
+                    <?php 
+                        $query = "SELECT * FROM consumer";
+                        $result = mysqli_query($conn, $query);
+                        while ($row = mysqli_fetch_assoc($result)) {
+                            echo "<option value='".$row['consumer_id']."'>".$row['consumer_name']." (".$row['consumer_id'].")</option>";
+                        }
+                    ?>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label>Billing Month</label>
+                <select name="month" required>
+                    <option value="" disabled selected>Select month...</option>
+                    <?php
+                        $months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+                        foreach($months as $m) echo "<option value='$m'>$m</option>";
+                    ?>
+                </select>
+            </div>
 
-                if ($result && mysqli_num_rows($result) > 0) {
-                    while ($row = mysqli_fetch_assoc($result)) {
-                        $consumer_id = $row['consumer_id'];
-                        $consumer_name = $row['consumer_name'];
-                        echo "<option value='$consumer_id'>$consumer_name - $consumer_id</option>";
-                    }
-                } else {
-                    echo "<option disabled>No Consumer Exist</option>";
+            <div class="form-group">
+                <label>Total Units</label>
+                <input type="number" name="unit" placeholder="e.g. 150" required>
+            </div>
+
+            <div class="form-group">
+                <label>Bill Amount (₹)</label>
+                <input type="number" name="amount" placeholder="e.g. 750" required>
+            </div>
+
+            <button type="submit" class="btn" style="width: 100%; border: none; cursor: pointer;">Add Bill Record</button>
+        </form>
+
+        <?php 
+            if($_SERVER['REQUEST_METHOD'] == "POST"){
+                $cid = mysqli_real_escape_string($conn, $_POST['consumer_id']);
+                $mon = mysqli_real_escape_string($conn, $_POST['month']);
+                $amt = mysqli_real_escape_string($conn, $_POST['amount']);
+                $unt = mysqli_real_escape_string($conn, $_POST['unit']);
+                
+                $query = "INSERT INTO bill (consumer_id, month, amount, unit) VALUES ('$cid', '$mon', '$amt', '$unt')";
+                if(mysqli_query($conn, $query)){
+                    echo "<p style='color: #22c55e; text-align: center; margin-top: 1rem; font-weight: 600;'>Bill added successfully!</p>";
                 }
-            ?>
-        </select>
-        <select name="month" required>
-            <option value="" disabled selected>Select Month</option>
-            <?php
-                $month_drop = ['jan','feb','mar','april','may','jun','jul','aug','sept','oct','nov','dec'];
-                for($i=0;$i<count($month_drop);$i++){
-                    $mon = $month_drop[$i];
-                    echo "<option value='${mon}'>$mon</option>";
-                }
-            ?>
-        </select>
-        <input type="number" name="amount" placeholder="amount">
-        <input type="number" name="unit" placeholder="unit">
-        <input type="submit" value="Add">
-    </form>
-</div>
-<?php 
-    if($_SERVER['REQUEST_METHOD'] == "POST"){
-        $consumer_id = $_POST['consumer_id'];
-        $month = $_POST['month'];
-        $amount = $_POST['amount'];
-        $unit = $_POST['unit'];
-        $ins_query = "INSERT INTO bill(consumer_id,month,amount,unit)VALUES($consumer_id,'$month',$amount,$unit)";
-        $result = mysqli_query($conn,$ins_query);
-        echo "<script>alert('Succes fully added bill, $consumer_id' : with $amount on $month');</script>";
-    }
-?>
+            }
+        ?>
+    </div>
+</body>
+</html>
